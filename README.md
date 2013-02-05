@@ -38,8 +38,8 @@ Credits
 -------
 
 * [Cocomore AG](http://www.cocomore.com)
-** Karl Fritsche - [attrib](http://drupal.org/user/619702)
-** Alejandro Leiva - [gloob](http://drupal.org/user/1866660)
+* Karl Fritsche (karl.fritsche@cocomore.com) - [attrib](http://drupal.org/user/619702)
+* Alejandro Leiva (alejandro.leiva@cocomore.com) - [gloob](http://drupal.org/user/1866660)
 * [MultilingualWeb-LT Working Group](http://www.w3.org/International/multilingualweb/lt/)
 
 License
