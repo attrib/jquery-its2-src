@@ -1,0 +1,6 @@
+[submodule "tests/ITS-2.0-Testsuite"]
+	path = tests/ITS-2.0-Testsuite
+	url = https://github.com/finnle/ITS-2.0-Testsuite
+[submodule "release"]
+	path = release
+	url = https://github.com/attrib/jquery-its2.git
