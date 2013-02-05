@@ -14,7 +14,7 @@ src: $(BUILD)
 test: $(TESTS)
 
 release:
-	cat $(BUILD) | uglifyjs -bo build/jquery-its-plugin.min.js
+	cat $(BUILD) | uglifyjs -bo build/jquery-its.min.js
 
 clean:
 	rm -f $(BUILD) $(TESTS)

@@ -6,13 +6,13 @@ This is a JQuery Plugin to parse a HTML file for ITS Markup and select HTML-node
 Usage
 -----
 
-Get the builded jquery.its-parser.js and link it in your project.
+Get the created jquery.its-parser.js and link it in your project.
 
 Examples:
 
 ``` 
-$('*:translate')			-> select all nodes with translate = yes
-$('*:translate(no)')			-> select all nodes with translate = no
+$('*:translate')                -> select all nodes with translate = yes
+$('*:translate(no)')            -> select all nodes with translate = no
 //TODO add more examples
 ```
 
