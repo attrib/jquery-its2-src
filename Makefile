@@ -13,9 +13,15 @@ src: $(BUILD)
 	cat $(BUILD) | uglifyjs -bo build/jquery.its-parser.js
 
 test: $(TESTS)
+	php tests/index.php >> /dev/null
+	find tests/ITS-2.0-Testsuite/its2.0/outputimplementors/cocomore -name *.txt* -exec rm {} \;
+	sh tests/test_all.sh
+	java -jar tests/saxon.jar tests/ITS-2.0-Testsuite/its2.0/testsuiteMaster.xml tests/ITS-2.0-Testsuite/its2.0/testsuiteDashboard.xsl -o:tests/ITS-2.0-Testsuite/its2.0/testSuiteDashboard.html
+	rm tests/test_all.sh
 
 clean:
-	rm -f $(BUILD) $(TESTS) build/jquery.its-parser.js
+	rm -f $(BUILD) $(TESTS) build/jquery.its-parser.js tests/test_all.sh
+	find tests/ITS-2.0-Testsuite -name *.updated.html -exec rm {} \;
 
 release: clean src
 	rm -f release/jquery.its-parser.js release/jquery.its-parser.min.js

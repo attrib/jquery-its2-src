@@ -40,10 +40,93 @@ $.extend
     if callback
       callback(window.rulesController)
 
+  getITSData: (element) ->
+    $(element).getITSData();
+
+$.fn.extend
+  getITSData: () ->
+    values = []
+    for element in this
+      ruleValues = window.rulesController.apply element
+      if ruleValues
+        delete ruleValues.ParamRule
+        value = {}
+        for ruleName, rule of ruleValues
+          value = $.extend value, rule
+        values.push value
+    if values.length == 1
+      values.pop()
+    else
+      values
+
 $.extend $.expr[':'],
   translate: (a, i, m) ->
-    query = 'translate=' + if m[3] then m[3] else 'yes'
+    query = if m[3] then m[3] else 'yes'
     value = window.rulesController.apply a, 'TranslateRule'
-    return value == query
-  locnote: (a, i, m) ->
+    return value.translate == ( query == 'yes' )
+
+  locNote: (a, i, m) ->
+    type = if m[3] then m[3] else 'any'
+    value = window.rulesController.apply a, 'LocalizationNoteRule'
+    if value.locNote
+      if type == 'any'
+        return true
+      else if value.locNoteType == type
+        return true
     return false
+
+  storageSize: (a, i, m) ->
+    query = if m[3] then m[3] else 'any'
+    value = window.rulesController.apply a, 'StorageSizeRule'
+    if value.storageSize
+      if query == 'any'
+        return true
+      else
+        query = query.split ','
+        for test in query
+          match = test.match /(size|encoding|linebreak):\s*(.*?)\s*$/
+          console.log match
+          switch match[1]
+            when "size"
+              match2 = match[2].match /([<>!=]*)\s*(\d*)/
+              console.log match2
+              if match2[2]
+                switch match2[1]
+                  when "", "=", "=="
+                    if value.storageSize != match2[2]
+                      return false
+                  when "!="
+                    if value.storageSize == match2[2]
+                      return false
+                  when ">"
+                    if value.storageSize > match2[2]
+                      return false
+                  when "<"
+                    if value.storageSize < match2[2]
+                      return false
+                  else
+                    return false
+              else
+                return false
+            when "encoding"
+              if value.storageEncoding != match[2]
+                return false;
+            when "linebreak"
+              if value.lineBreakType != match[2]
+                return false;
+            else
+              return false
+
+        return true
+
+    return false
+
+    allowedCharacters: (a, i, m) ->
+      query = if m[3] then m[3] else 'any'
+      value = window.rulesController.apply a, 'AllowedCharactersRule'
+      if value.allowedCharacters
+        if query == 'any'
+          return true
+        else if value.allowedCharacters == query
+          return true
+      return false

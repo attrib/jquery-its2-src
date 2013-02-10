@@ -15,7 +15,7 @@ $target = str_replace(TEST_ROOT_PATH . "/", '', $input);
 $target = str_replace(basename($input), '', $target);
 
 $scripts = '<script data-test="mlw-lt" src="../../../../../../lib/jquery-1.8.3.min.js"></script>
-    <script data-test="mlw-lt" src="../../../../../../build/jquery-its-plugin.min.js"></script>
+    <script data-test="mlw-lt" src="../../../../../../build/jquery.its-parser.js"></script>
     <script data-test="mlw-lt" src="../../../../../its-translate.test.js"></script>'."\n";
 
 $test = file_get_contents($input);

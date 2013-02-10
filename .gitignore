@@ -1,2 +1,4 @@
 build/*
 tests/its-translate.test.js
+node_modules
+tests/test_all.sh

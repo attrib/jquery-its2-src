@@ -52,8 +52,18 @@ function render_tests($tests) {
     //TODO: Return the string don't echo it.
 }
 
+function write_test_bash($tests) {
+  $content = "#/bin/sh\n";
+  foreach ($tests as $category => $test) {
+    foreach ($test as $t) {
+      $content .= "phantomjs ".TEST_ROOT_PATH."/test.js ".TEST_ROOT_PATH."/ITS-2.0-Testsuite/its2.0/{$t['input']} ".TEST_ROOT_PATH."/ITS-2.0-Testsuite/its2.0/{$t['output']}\n";
+    }
+  }
+  file_put_contents(TEST_ROOT_PATH. '/test_all.sh', $content);
+}
+
 $tests = parse_tests(TEST_ROOT_PATH . '/ITS-2.0-Testsuite/its2.0/testsuiteMaster.xml', 'cocomore');
 render_tests($tests);
-
+write_test_bash($tests);
 
 ?>
