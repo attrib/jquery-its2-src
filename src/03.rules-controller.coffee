@@ -33,7 +33,7 @@ class RulesController
 
   addXML: (xml) ->
     # TODO: Schema Validation?
-    if xml.tagName and xml.tagName.toLowerCase() is "its:rules" and $(xml).attr('version') is "2.0"
+    if xml.tagName and xml.tagName.toLowerCase() is "its:rules" and ($(xml).attr('version') is "2.0" or $(xml).attr('its:version') is "2.0")
       @parseXML xml
     else
       if xml.hasChildNodes

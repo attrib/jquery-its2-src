@@ -121,12 +121,12 @@ $.extend $.expr[':'],
 
     return false
 
-    allowedCharacters: (a, i, m) ->
-      query = if m[3] then m[3] else 'any'
-      value = window.rulesController.apply a, 'AllowedCharactersRule'
-      if value.allowedCharacters
-        if query == 'any'
-          return true
-        else if value.allowedCharacters == query
-          return true
-      return false
+  allowedCharacters: (a, i, m) ->
+    query = if m[3] then m[3] else 'any'
+    value = window.rulesController.apply a, 'AllowedCharactersRule'
+    if value.allowedCharacters
+      if query == 'any'
+        return true
+      else if value.allowedCharacters == query
+        return true
+    return false
