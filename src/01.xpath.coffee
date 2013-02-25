@@ -64,6 +64,7 @@ class XPath
     document.evaluate selector, domElement, null, resultType, null
 
   process: (selector) ->
+    return false if not @element?
     selector = @filter selector
     xpe = new XPathEvaluator()
     domElement = @element.get(0)
