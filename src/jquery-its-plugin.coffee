@@ -85,11 +85,9 @@ $.extend $.expr[':'],
         query = query.split ','
         for test in query
           match = test.match /(size|encoding|linebreak):\s*(.*?)\s*$/
-          console.log match
           switch match[1]
             when "size"
               match2 = match[2].match /([<>!=]*)\s*(\d*)/
-              console.log match2
               if match2[2]
                 switch match2[1]
                   when "", "=", "=="
