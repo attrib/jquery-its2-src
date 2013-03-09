@@ -49,7 +49,7 @@ class TranslateRule extends Rule
     value = @inherited tag
     if value instanceof Object then ret = value
     # 4. Local attributes
-    if ($(tag).attr(@NAME) != undefined)
+    if (tag.hasAttribute @NAME and $(tag).attr(@NAME) != undefined)
       ret = { translate: normalize $(tag).attr(@NAME) }
     # ...and return
     ret
@@ -61,7 +61,7 @@ class TranslateRule extends Rule
     { translate: false }
 
   normalize = (translateString) ->
-    if typeof  translateString == "boolean"
+    if typeof translateString == "boolean"
       return translateString
     # Trim the string and lowecase.
     translateString = translateString.replace(/^\s+|\s+$/g, '').toLowerCase();
