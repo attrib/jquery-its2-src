@@ -2,6 +2,8 @@ SRC=$(wildcard src/*.coffee)
 TEST=$(wildcard tests/*.coffee)
 BUILD=$(SRC:src/%.coffee=build/%.js)
 TESTS=$(TEST:tests/%.coffee=tests/%.js)
+VERSION=$(shell cat VERSION)
+MINOR=$(shell cat VERSION | grep '[0-9]*$' -o)
 
 build/%.js: src/%.coffee
 	coffee -cbp $< > $@
@@ -27,5 +29,6 @@ release: clean src
 	rm -f release/jquery.its-parser.js release/jquery.its-parser.min.js
 	cat $(BUILD) | uglifyjs -bo release/jquery.its-parser.js
 	cat $(BUILD) | uglifyjs -o release/jquery.its-parser.min.js
+	sh next_version.sh
 
 all: src test

@@ -53,7 +53,7 @@ function render_tests($tests) {
 }
 
 function write_test_bash($tests) {
-  $content = "#/bin/sh\n";
+  $content = "#!/bin/sh\n";
   foreach ($tests as $category => $test) {
     foreach ($test as $t) {
       $content .= "phantomjs ".TEST_ROOT_PATH."/test.js ".TEST_ROOT_PATH."/ITS-2.0-Testsuite/its2.0/{$t['input']} ".TEST_ROOT_PATH."/ITS-2.0-Testsuite/its2.0/{$t['output']}\n";
