@@ -49,7 +49,7 @@ class TranslateRule extends Rule
     value = @inherited tag
     if value instanceof Object then ret = value
     # 4. Local attributes
-    if (tag.hasAttribute(@NAME) and $(tag).attr(@NAME) != undefined)
+    if (!(tag instanceof Attr) and tag.hasAttribute(@NAME) and $(tag).attr(@NAME) != undefined)
       ret = { translate: normalize $(tag).attr(@NAME) }
     # ...and return
     ret
