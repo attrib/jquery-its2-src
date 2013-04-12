@@ -30,5 +30,9 @@ release: clean src
 	cat $(BUILD) | uglifyjs -bo release/jquery.its-parser.js
 	cat $(BUILD) | uglifyjs -o release/jquery.its-parser.min.js
 	sh next_version.sh
+	cat header.txt release/jquery.its-parser.js > tmp
+	mv tmp release/jquery.its-parser.js
+	cat header.txt release/jquery.its-parser.min.js > tmp
+	mv tmp release/jquery.its-parser.min.js
 
 all: src test
