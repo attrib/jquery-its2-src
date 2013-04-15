@@ -32,8 +32,14 @@ page.open(system.args[1], function (status) {
   page.injectJs("../build/jquery.its-parser.js");
   page.injectJs("./its-translate.test.js");
   var testOutput = page.evaluate(function() {
-    window.testFile();
-    return $('textarea').text();
+    try {
+      window.testFile();
+      return $('#its-result').text();
+    }
+    catch(e) {
+      console.log(window.location.pathname + ": " + e.message);
+      return e.stack + "\n";
+    }
   });
   fs.write(system.args[2], testOutput, 'w');
   phantom.exit();

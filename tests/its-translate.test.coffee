@@ -65,4 +65,4 @@ window.testFile = () ->
           return 0
         for obj in tmp
           string += obj.str
-    $('<textarea>' + string + '</textarea>').css('width', '100%').css('height', '500px').appendTo('body');
+    $('<textarea id="its-result">' + string + '</textarea>').css('width', '100%').css('height', '500px').appendTo('body');
