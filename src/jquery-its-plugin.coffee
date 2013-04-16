@@ -25,7 +25,7 @@ $ = jQuery
 $.extend
   parseITS: (callback) ->
     window.XPath = XPath
-    globalRules = [new TranslateRule(), new LocalizationNoteRule(), new StorageSizeRule(), new AllowedCharactersRule(), new ParamRule(), new TextAnalysisRule()]
+    globalRules = [new TranslateRule(), new LocalizationNoteRule(), new StorageSizeRule(), new AllowedCharactersRule(), new ParamRule(), new AnnotatorsRef(), new TextAnalysisRule()]
     external_rules = $('link[rel="its-rules"]')
     window.rulesController = new RulesController(globalRules)
     window.rulesController.setContent $('html')
@@ -58,6 +58,17 @@ $.fn.extend
       values.pop()
     else
       values
+
+  getITSAnnotatorsRef: (searchRuleName) ->
+    annotator = []
+    for element in this
+      ruleValues = window.rulesController.apply element, 'AnnotatorsRef'
+      if ruleValues.annotatorsRefSplitted
+        for ruleName, ruleAnnotator of ruleValues.annotatorsRefSplitted
+          if searchRuleName.toLowerCase() == ruleName.toLowerCase()
+            annotator.push ruleAnnotator
+    annotator
+
 
 $.extend $.expr[':'],
   translate: (a, i, m) ->

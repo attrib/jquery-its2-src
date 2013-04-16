@@ -53,6 +53,15 @@ $('span').getITSData()          -> get the ITS Data for this node
 $.getITSData('span')            -> same as above
 ```
 
+### getITSAnnotatorsRef( dataCategoryName ) ###
+
+Get the (Annotators References)[http://www.w3.org/International/multilingualweb/lt/drafts/its20/its20.html#its-tool-annotation] of the selected DOM nodes.
+
+```
+$('span').getITSAnnotatorsRef('textAnalysis')    -> get the annotators Reference of all spans
+  returns ["http://enrycher.ijs.si"]
+```
+
 ### :translate ###
 
 Selector for the [translate](http://www.w3.org/TR/its20/#trans-datacat) data category.

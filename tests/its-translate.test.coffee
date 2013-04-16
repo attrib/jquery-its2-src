@@ -26,6 +26,9 @@ formatOutput = (value) ->
   if value instanceof Object
     outputValue = ""
     for key, val of value
+      # don't show the splitted output
+      if key == 'annotatorsRefSplitted'
+        continue
       if key == 'translate'
         val = if val then 'yes' else 'no'
       val = val.replace /\n/g, ' '
