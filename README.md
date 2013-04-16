@@ -55,7 +55,7 @@ $.getITSData('span')            -> same as above
 
 ### getITSAnnotatorsRef( dataCategoryName ) ###
 
-Get the (Annotators References)[http://www.w3.org/International/multilingualweb/lt/drafts/its20/its20.html#its-tool-annotation] of the selected DOM nodes.
+Get the [Annotators References](http://www.w3.org/International/multilingualweb/lt/drafts/its20/its20.html#its-tool-annotation) of the selected DOM nodes.
 
 ```
 $('span').getITSAnnotatorsRef('textAnalysis')    -> get the annotators Reference of all spans
