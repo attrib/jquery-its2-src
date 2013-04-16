@@ -25,7 +25,7 @@ $ = jQuery
 $.extend
   parseITS: (callback) ->
     window.XPath = XPath
-    globalRules = [new TranslateRule(), new LocalizationNoteRule(), new StorageSizeRule(), new AllowedCharactersRule(), new ParamRule()]
+    globalRules = [new TranslateRule(), new LocalizationNoteRule(), new StorageSizeRule(), new AllowedCharactersRule(), new ParamRule(), new TextAnalysisRule()]
     external_rules = $('link[rel="its-rules"]')
     window.rulesController = new RulesController(globalRules)
     window.rulesController.setContent $('html')
@@ -97,10 +97,10 @@ $.extend $.expr[':'],
                     if value.storageSize == match2[2]
                       return false
                   when ">"
-                    if value.storageSize > match2[2]
+                    if value.storageSize <= match2[2]
                       return false
                   when "<"
-                    if value.storageSize < match2[2]
+                    if value.storageSize >= match2[2]
                       return false
                   else
                     return false
@@ -127,4 +127,57 @@ $.extend $.expr[':'],
         return true
       else if value.allowedCharacters == query
         return true
+    return false
+
+  textAnalysis: (a, i, m) ->
+    query = if m[3] then m[3] else 'any'
+    value = window.rulesController.apply a, 'TextAnalysisRule'
+    if (k for own k of value).length isnt 0
+      if query is 'any'
+        return true
+
+      query = query.split ','
+      for test in query
+        match = test.match /(taConfidence|taClassRef|taSource|taIdent|taIdentRef):\s*(.*?)\s*$/
+        switch(match[1])
+          when "taConfidence"
+            match2 = match[2].match /([<>!=]*)\s*([\d\.]*)/
+            if match2[2]
+              switch match2[1]
+                when "", "=", "=="
+                  if value.taConfidence != match2[2]
+                    return false
+                when "!="
+                  if value.taConfidence == match2[2]
+                    return false
+                when ">"
+                  if value.taConfidence <= match2[2]
+                    return false
+                when "<"
+                  if value.taConfidence >= match2[2]
+                    return false
+                else
+                  return false
+
+          when "taClassRef"
+            if value.taClassRef != match[2]
+              return false
+
+          when "taSource"
+            if value.taSource != match[2]
+              return false
+
+          when "taIdent"
+            if value.taIdent != match[2]
+              return false
+
+          when "taIdentRef"
+            if value.taIdentRef != match[2]
+              return false
+
+          else
+            return false
+
+      return true
+
     return false

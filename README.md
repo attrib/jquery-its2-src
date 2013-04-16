@@ -15,6 +15,7 @@ Currently supported data categories from ITS 2.0:
 * Localization Note
 * Storage Size
 * Allowed Characters
+* Text Analysis
 
 Usage
 -----
@@ -104,6 +105,23 @@ $('*:allowedCharacters')        -> select all nodes with a any allowed character
 $('*:allowedCharacters([a-Z])') -> select all nodes with the specified allowed characters ([a-Z])
 ```
 
+### :textAnalysis ###
+
+Selector for the [text analysis](http://www.w3.org/TR/its20/#textanalysis) data category.
+
+** For all selectors parseITS has to be run once before. **
+
+```
+$('*:textAnalysis')                        -> select all nodes with a any text analysis attribute
+$('*:textAnalysis(taConfidence: 0.7)')     -> select all nodes with a confidence of 0.7
+$('*:textAnalysis(taConfidence: >0.6)')    -> select all nodes with a confidence above 0.6 (also supported are >,!=,<)
+$('*:textAnalysis(taIdentRef: http://dbpedia.org/resource/Dublin)')         -> select all nodes with a given IdentRef
+$('*:textAnalysis(taClassRef: http://nerd.eurecom.fr/ontology#Location)')   -> select all nodes with a given ClassRef
+$('*:textAnalysis(taSource: Wordnet3.0)')  -> select all nodes with a given Source
+$('*:textAnalysis(taIdent: 301467919)')    -> select all nodes with a given Ident
+$('*:textAnalysis(taConfidence: >0.5, taSource: Wordnet3.0)')               -> matching query can be combined with , (comma)
+                                                                               everything has to be true to be returned
+```
 
 Build
 -----

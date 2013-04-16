@@ -1,6 +1,7 @@
 Version 1.1.2 (development)
 =============
 
+* attrib: Added data category text analysis support.
 * attrib: Added GPL header for released javascript files
 * attrib: Fixed error when using Attributes for translate data category.
 
