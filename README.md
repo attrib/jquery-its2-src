@@ -7,7 +7,7 @@ With this plugin it is possible to select HTML-nodes depending on ITS markup.
 This is the original coffeescript source repository.
 See the [jquery-its](https://github.com/attrib/jquery-its2) repository for already packaged files and more information.
 
-There is also a bigger example repository ((jquery-its-example)[https://github.com/attrib/jquery-its-example]),
+There is also a bigger example repository ([jquery-its-example](https://github.com/attrib/jquery-its-example)),
 where you can highlight and edit ITS Data.
 
 Currently supported data categories from ITS 2.0:

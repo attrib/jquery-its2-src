@@ -27,11 +27,11 @@ class TextAnalysisRule extends Rule
     @RULE_NAME = 'its:textanalysisrule'
     @NAME = 'textAnalysis'
     @attributes = {
-      taConfidence: 'its-ta-confidence',
       taClassRef: 'its-ta-class-ref',
-      taSource: 'its-ta-source',
+      taConfidence: 'its-ta-confidence',
       taIdent: 'its-ta-ident',
       taIdentRef: 'its-ta-ident-ref'
+      taSource: 'its-ta-source',
     }
 
   parse: (rule, content) ->
@@ -51,7 +51,15 @@ class TextAnalysisRule extends Rule
           rules.push object
 
       # exaclty one of the following
-      if $(rule).attr('taSourcePointer') and $(rule).attr('taIdentPointer')
+      if $(rule).attr 'taIdentRefPointer'
+        foundOne = true
+        xpath = new XPath content
+        newRules = xpath.resolve object.selector, $(rule).attr 'taIdentRefPointer'
+        for newRule in newRules
+          if newRule.result instanceof Attr then object.taIdentRef = newRule.result.value else object.taIdentRef = $(newRule.result).text()
+          rules.push object
+
+      else if $(rule).attr('taSourcePointer') and $(rule).attr('taIdentPointer')
         foundOne = true
         xpath = new XPath content
         newRules = xpath.resolve object.selector, $(rule).attr 'taSourcePointer'
@@ -60,14 +68,6 @@ class TextAnalysisRule extends Rule
         newRules = xpath.resolve object.selector, $(rule).attr 'taIdentPointer'
         for newRule in newRules
           if newRule.result instanceof Attr then object.taIdent = newRule.result.value else object.taIdent = $(newRule.result).text()
-          rules.push object
-
-      else if $(rule).attr 'taIdentRefPointer'
-        foundOne = true
-        xpath = new XPath content
-        newRules = xpath.resolve object.selector, $(rule).attr 'taIdentRefPointer'
-        for newRule in newRules
-          if newRule.result instanceof Attr then object.taIdentRef = newRule.result.value else object.taIdentRef = $(newRule.result).text()
           rules.push object
 
       if !foundOne
@@ -87,12 +87,12 @@ class TextAnalysisRule extends Rule
         if xpath.process rule.selector
           if rule.taClassRef
             ret.taClassRef = rule.taClassRef
-          if rule.taSource
-            ret.taSource = rule.taSource
           if rule.taIdent
             ret.taIdent = rule.taIdent
           if rule.taIdentRef
             ret.taIdentRef = rule.taIdentRef
+          if rule.taSource
+            ret.taSource = rule.taSource
     # 3. no inheritance
     # 4. Local attributes
     for objectName, attributeName of @attributes

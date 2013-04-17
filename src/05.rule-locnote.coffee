@@ -41,7 +41,7 @@ class LocalizationNoteRule extends Rule
     else
       object.locNote = locNote.trim()
     # It should be (description || alert)
-    object.locNoteType = locNoteType
+    object.locNoteType = @normalizeType locNoteType
     object
 
   parse: (rule, content) ->
@@ -89,8 +89,12 @@ class LocalizationNoteRule extends Rule
       if $(tag).attr attributeName
         ret[objectName] = $(tag).attr attributeName
     # ...and return
+    if ret.locNoteType?
+      ret.locNoteType = @normalizeType ret.locNoteType
     ret
 
   def: ->
     {}
 
+  normalizeType: (type) ->
+    type.toLowerCase()
