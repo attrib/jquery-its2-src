@@ -31,7 +31,7 @@ class TranslateRule extends Rule
       object = {}
       object.selector = $(rule).attr('selector')
       object.type = @NAME
-      object.translate = normalize $(rule).attr(@NAME)
+      object.translate = @normalizeYesNo $(rule).attr(@NAME)
       @addSelector object
 
   apply: (tag) =>
@@ -50,7 +50,7 @@ class TranslateRule extends Rule
     if value instanceof Object then ret = value
     # 4. Local attributes
     if (!(tag instanceof Attr) and tag.hasAttribute(@NAME) and $(tag).attr(@NAME) != undefined)
-      ret = { translate: normalize $(tag).attr(@NAME) }
+      ret = { translate: @normalizeYesNo $(tag).attr(@NAME) }
     # ...and return
     ret
 
@@ -59,13 +59,3 @@ class TranslateRule extends Rule
 
   defAttr: ->
     { translate: false }
-
-  normalize = (translateString) ->
-    if typeof translateString == "boolean"
-      return translateString
-    # Trim the string and lowecase.
-    translateString = translateString.replace(/^\s+|\s+$/g, '').toLowerCase();
-    if translateString == "yes"
-      return true
-    else
-      return false

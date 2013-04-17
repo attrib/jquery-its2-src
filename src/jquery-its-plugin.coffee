@@ -25,7 +25,7 @@ $ = jQuery
 $.extend
   parseITS: (callback) ->
     window.XPath = XPath
-    globalRules = [new TranslateRule(), new LocalizationNoteRule(), new StorageSizeRule(), new AllowedCharactersRule(), new ParamRule(), new AnnotatorsRef(), new TextAnalysisRule()]
+    globalRules = [new TranslateRule(), new LocalizationNoteRule(), new StorageSizeRule(), new AllowedCharactersRule(), new ParamRule(), new AnnotatorsRef(), new TextAnalysisRule(), new TerminologyRule()]
     external_rules = $('link[rel="its-rules"]')
     window.rulesController = new RulesController(globalRules)
     window.rulesController.setContent $('html')
@@ -184,6 +184,51 @@ $.extend $.expr[':'],
 
           when "taIdentRef"
             if value.taIdentRef != match[2]
+              return false
+
+          else
+            return false
+
+      return true
+
+    return false
+
+  terminology: (a, i, m) ->
+    query = if m[3] then m[3] else 'any'
+    value = window.rulesController.apply a, 'TerminologyRule'
+    if (k for own k of value).length isnt 0
+      if query is 'any'
+        return value.term
+
+      query = query.split ','
+      for test in query
+        match = test.match /(term|termInfoRef|termConfidence):\s*(.*?)\s*$/
+        switch(match[1])
+          when "termConfidence"
+            match2 = match[2].match /([<>!=]*)\s*([\d\.]*)/
+            if match2[2]
+              switch match2[1]
+                when "", "=", "=="
+                  if value.termConfidence != match2[2]
+                    return false
+                when "!="
+                  if value.termConfidence == match2[2]
+                    return false
+                when ">"
+                  if value.termConfidence <= match2[2]
+                    return false
+                when "<"
+                  if value.termConfidence >= match2[2]
+                    return false
+                else
+                  return false
+
+          when "termInfoRef"
+            if value.termInfoRef != match[2]
+              return false
+
+          when "term"
+            if (value.term and "no" == match[2]) or (!value.term and "yes" == match[2])
               return false
 
           else

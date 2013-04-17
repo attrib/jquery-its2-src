@@ -16,6 +16,7 @@ Currently supported data categories from ITS 2.0:
 * Storage Size
 * Allowed Characters
 * Text Analysis
+* Terminology
 
 Usage
 -----
@@ -130,6 +131,23 @@ $('*:textAnalysis(taSource: Wordnet3.0)')  -> select all nodes with a given Sour
 $('*:textAnalysis(taIdent: 301467919)')    -> select all nodes with a given Ident
 $('*:textAnalysis(taConfidence: >0.5, taSource: Wordnet3.0)')               -> matching query can be combined with , (comma)
                                                                                everything has to be true to be returned
+```
+
+### :terminology ###
+
+Selector for the [terminology](http://www.w3.org/TR/its20/#terminology) data category.
+
+** For all selectors parseITS has to be run once before. **
+
+```
+$('*:terminology')                        -> select all nodes which are a term
+$('*:terminology(termConfidence: 0.7)')   -> select all nodes with a confidence of 0.7
+$('*:terminology(termConfidence: >0.6)')  -> select all nodes with a confidence above 0.6 (also supported are >,!=,<)
+$('*:terminology(termInfoRef: #TDPV)')    -> select all nodes with a given InfoRef
+$('*:terminology(term: yes)')             -> select all nodes which are a term
+$('*:terminology(term: no)')              -> select all nodes which are not a term
+$('*:terminology(termConfidence: >0.5, term: yes)')  -> matching query can be combined with , (comma)
+                                                        everything has to be true to be returned
 ```
 
 Build

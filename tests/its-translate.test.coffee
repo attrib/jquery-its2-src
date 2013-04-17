@@ -57,6 +57,8 @@ window.testFile = () ->
       value = $.getITSData tag
       if document.URL.search(/translate\/html\//) == -1
         delete value.translate
+      if document.URL.search(/terminology\/html\//) == -1
+        delete value.term
       string += "#{xpath.path}#{formatOutput value}\n"
       if tag.attributes.length != 0
         tmp = []
@@ -65,6 +67,8 @@ window.testFile = () ->
           value = $.getITSData attribute
           if document.URL.search(/translate\/html\//) == -1
             delete value.translate
+          if document.URL.search(/terminology\/html\//) == -1
+            delete value.term
           tmp.push
             str:  "#{xpath.path}/@#{attributeName}#{formatOutput value}\n",
             name: attributeName

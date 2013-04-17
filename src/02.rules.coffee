@@ -45,3 +45,13 @@ class Rule
   store: (node, object) =>
     xpath = new XPath node
     @applied[xpath.path] = object
+
+  normalizeYesNo: (translateString) ->
+    if typeof translateString == "boolean"
+      return translateString
+    # Trim the string and lowecase.
+    translateString = translateString.replace(/^\s+|\s+$/g, '').toLowerCase();
+    if translateString == "yes"
+      return true
+    else
+      return false

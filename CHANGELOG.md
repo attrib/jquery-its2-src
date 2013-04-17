@@ -1,6 +1,7 @@
 Version 1.1.2 (development)
 =============
 
+* attrib: Added data category terminology support.
 * attrib: Fixed annotators ref inheritance bug.
 * attrib: Added annotators ref support.
 * attrib: Added data category text analysis support.
