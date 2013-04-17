@@ -26,13 +26,19 @@ formatOutput = (value) ->
   if value instanceof Object
     outputValue = ""
     for key, val of value
-      # don't show the splitted output
-      if key == 'annotatorsRefSplitted'
-        continue
-      if key == 'translate'
-        val = if val then 'yes' else 'no'
-      val = val.replace /\n/g, ' '
-      outputValue += "\t#{key}=\"#{val}\""
+      if key == 'annotatorsRef'
+        annotators = []
+        for attribute, annotator of val
+          attribute = attribute.charAt(0).toLowerCase() + attribute.slice(1)
+          attribute = attribute.replace(/([A-Z])/g, "-$1").toLowerCase()
+          annotators.push attribute + "|" + annotator
+        val = annotators.sort().join(" ")
+        outputValue += "\t#{key}=\"#{val}\""
+      else
+        if typeof val is "boolean"
+          val = if val then 'yes' else 'no'
+        val = val.replace /\n/g, ' '
+        outputValue += "\t#{key}=\"#{val}\""
   else
     outputValue = value
   if outputValue == 'default' then '' else outputValue

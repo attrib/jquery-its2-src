@@ -25,9 +25,7 @@ class AnnotatorsRef extends Rule
   constructor: ->
     super
     @NAME = 'annotatorsRef'
-    @attributes = {
-    annotatorsRef: 'its-annotators-ref',
-    }
+    @attributeName = 'its-annotators-ref'
 
   parse: (rule, content) ->
     # Only local attribute
@@ -46,21 +44,19 @@ class AnnotatorsRef extends Rule
       value = @inherited tag
     if value instanceof Object then ret = value
     # 4. Local attributes
-    for objectName, attributeName of @attributes
-      if $(tag).attr attributeName
-        values = $(tag).attr attributeName
-        ret[objectName] = values
-        values = values.split ' '
-        obj = {}
-        for value in values
-          value = value.split '|'
-          nameParts = value[0].split '-'
-          name = ""
-          for namePart in nameParts
-            name += namePart.charAt(0).toUpperCase() + namePart.slice(1)
-          obj[name] = value[1]
-        ret[objectName + 'Splitted'] = obj
-        @store tag, ret
+    if $(tag).attr @attributeName
+      values = $(tag).attr @attributeName
+      values = values.split ' '
+      obj = if ret.annotatorsRef? then ret.annotatorsRef else {}
+      for value in values
+        value = value.split '|'
+        nameParts = value[0].split '-'
+        name = ""
+        for namePart in nameParts
+          name += namePart.charAt(0).toUpperCase() + namePart.slice(1)
+        obj[name] = value[1]
+      ret.annotatorsRef = obj
+      @store tag, ret
     # ...and return
     ret
 
