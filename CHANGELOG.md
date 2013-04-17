@@ -1,6 +1,7 @@
 Version 1.1.2 (development)
 =============
 
+* attrib: Added directionality data category support.
 * attrib: Changing order in text analysis to be conferment with ITS 2.0 Testsuite
 * attrib: Added localization note type normalization.
 * attrib: Added data category terminology support.

@@ -25,7 +25,8 @@ $ = jQuery
 $.extend
   parseITS: (callback) ->
     window.XPath = XPath
-    globalRules = [new TranslateRule(), new LocalizationNoteRule(), new StorageSizeRule(), new AllowedCharactersRule(), new ParamRule(), new AnnotatorsRef(), new TextAnalysisRule(), new TerminologyRule()]
+    globalRules = [new TranslateRule(), new LocalizationNoteRule(), new StorageSizeRule(), new AllowedCharactersRule(),
+      new ParamRule(), new AnnotatorsRef(), new TextAnalysisRule(), new TerminologyRule(), new DirectionalityRule()]
     external_rules = $('link[rel="its-rules"]')
     window.rulesController = new RulesController(globalRules)
     window.rulesController.setContent $('html')
@@ -75,6 +76,11 @@ $.extend $.expr[':'],
     query = if m[3] then m[3] else 'yes'
     value = window.rulesController.apply a, 'TranslateRule'
     return value.translate == ( query == 'yes' )
+
+  dir: (a, i, m) ->
+    query = if m[3] then m[3] else 'ltr'
+    value = window.rulesController.apply a, 'DirectionalityRule'
+    return value.dir == query
 
   locNote: (a, i, m) ->
     type = if m[3] then m[3] else 'any'

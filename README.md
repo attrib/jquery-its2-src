@@ -17,6 +17,7 @@ Currently supported data categories from ITS 2.0:
 * Allowed Characters
 * Text Analysis
 * Terminology
+* Directionality
 
 Usage
 -----
@@ -148,6 +149,18 @@ $('*:terminology(term: yes)')             -> select all nodes which are a term
 $('*:terminology(term: no)')              -> select all nodes which are not a term
 $('*:terminology(termConfidence: >0.5, term: yes)')  -> matching query can be combined with , (comma)
                                                         everything has to be true to be returned
+```
+
+### :dir ###
+
+Selector for the [directionality](http://www.w3.org/TR/its20/#directionality) data category.
+
+** For all selectors parseITS has to be run once before. **
+
+```
+$('*:translate')                -> select all nodes with dir = ltr
+$('*:translate(ltr)')           -> select all nodes with dir = ltr
+$('*:translate(rtl)')            -> select all nodes with dir = rtl
 ```
 
 Build

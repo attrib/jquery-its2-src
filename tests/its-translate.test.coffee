@@ -43,6 +43,18 @@ formatOutput = (value) ->
     outputValue = value
   if outputValue == 'default' then '' else outputValue
 
+##
+# Function to remove default values, except when we are in the specific test folder
+##
+deleteValuesDependingOnTests = (value) ->
+  if document.URL.search(/translate\/html\//) == -1
+    delete value.translate
+  if document.URL.search(/terminology\/html\//) == -1
+    delete value.term
+  if document.URL.search(/directionality\/html\//) == -1
+    delete value.dir
+  value
+
 $ ->
   window.testFile()
 
@@ -54,21 +66,13 @@ window.testFile = () ->
       if $(tag).attr('data-test') == 'mlw-lt'
         continue
       xpath = new XPath(tag)
-      value = $.getITSData tag
-      if document.URL.search(/translate\/html\//) == -1
-        delete value.translate
-      if document.URL.search(/terminology\/html\//) == -1
-        delete value.term
+      value = deleteValuesDependingOnTests $.getITSData tag
       string += "#{xpath.path}#{formatOutput value}\n"
       if tag.attributes.length != 0
         tmp = []
         for attribute in tag.attributes
           attributeName = attribute.nodeName || attribute.name
-          value = $.getITSData attribute
-          if document.URL.search(/translate\/html\//) == -1
-            delete value.translate
-          if document.URL.search(/terminology\/html\//) == -1
-            delete value.term
+          value = deleteValuesDependingOnTests $.getITSData attribute
           tmp.push
             str:  "#{xpath.path}/@#{attributeName}#{formatOutput value}\n",
             name: attributeName
