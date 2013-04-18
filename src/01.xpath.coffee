@@ -92,7 +92,10 @@ class XPath
     while matchedElement = result.iterateNext()
       xpath = new XPath matchedElement
       ret = xpath.query pointer, XPathResult.ORDERED_NODE_ITERATOR_TYPE
-      obj = {selector: xpath.path, result: ret.iterateNext()}
+      values = []
+      while value = ret.iterateNext()
+        values.push value
+      obj = {selector: xpath.path, result: values[0], results: values}
       unrolled.push(obj)
     unrolled
 

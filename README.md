@@ -18,6 +18,7 @@ Currently supported data categories from ITS 2.0:
 * Text Analysis
 * Terminology
 * Directionality
+* Domain
 
 Usage
 -----
@@ -45,9 +46,12 @@ Get all the ITS Information from a specified node in the DOM.
 $('span').getITSData()          -> get the ITS Data for this node
     returns a object
     {
-      translate: yes,
+      translate: true,
+      term: false,
+      dir: "ltr",
       locNote: "This is a Note.",
       locNoteType: "alert",
+      domains: ["law"]
     }
 
 - OR -

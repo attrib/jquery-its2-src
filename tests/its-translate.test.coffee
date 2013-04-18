@@ -34,6 +34,8 @@ formatOutput = (value) ->
           annotators.push attribute + "|" + annotator
         val = annotators.sort().join(" ")
         outputValue += "\t#{key}=\"#{val}\""
+      else if key == 'domains'
+        outputValue += "\t#{key}=\"#{val.join(", ")}\""
       else
         if typeof val is "boolean"
           val = if val then 'yes' else 'no'

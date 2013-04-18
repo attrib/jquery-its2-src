@@ -26,7 +26,8 @@ $.extend
   parseITS: (callback) ->
     window.XPath = XPath
     globalRules = [new TranslateRule(), new LocalizationNoteRule(), new StorageSizeRule(), new AllowedCharactersRule(),
-      new ParamRule(), new AnnotatorsRef(), new TextAnalysisRule(), new TerminologyRule(), new DirectionalityRule()]
+      new ParamRule(), new AnnotatorsRef(), new TextAnalysisRule(), new TerminologyRule(), new DirectionalityRule(),
+      new DomainRule()]
     external_rules = $('link[rel="its-rules"]')
     window.rulesController = new RulesController(globalRules)
     window.rulesController.setContent $('html')
