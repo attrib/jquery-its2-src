@@ -19,6 +19,7 @@ Currently supported data categories from ITS 2.0:
 * Terminology
 * Directionality
 * Domain
+* Locale Filter
 
 Usage
 -----
@@ -165,6 +166,27 @@ Selector for the [directionality](http://www.w3.org/TR/its20/#directionality) da
 $('*:translate')                -> select all nodes with dir = ltr
 $('*:translate(ltr)')           -> select all nodes with dir = ltr
 $('*:translate(rtl)')            -> select all nodes with dir = rtl
+```
+
+### :localeFilter ###
+
+Selector for the [locale filter](http://www.w3.org/TR/its20/#LocaleFilter) data category.
+
+** For all selectors parseITS has to be run once before. **
+
+```
+$('*:localeFilter')                                   -> select all nodes which have a locale filter (not "include" - "*")
+$('*:localeFilter(localeFilterList: "de-DE, de-CH")') -> select all nodes with the exactly language list of de-DE, de-CH
+$('*:localeFilter(localeFilterType: include)')        -> select all nodes with the filter type of include
+$('*:localeFilter(localeFilterType: exclude)')        -> select all nodes with the filter type of exclude
+$('*:localeFilter(lang: de-DE)')                      -> select all nodes which should be included with de-DE
+                                                         This is true, even if there are more items in the filter list
+                                                         or when using *-DE, de-DE or * in filter list
+$('*:localeFilter(lang: de-*)')                       -> You even can use * in the query here to,
+                                                         see the detailed description from the standard
+                                                         for more information
+$('*:localeFilter(termConfidence: >0.5, term: yes)')  -> matching query can be combined with , (comma)
+                                                         everything has to be true to be returned
 ```
 
 Build

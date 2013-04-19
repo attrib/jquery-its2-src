@@ -55,6 +55,9 @@ deleteValuesDependingOnTests = (value) ->
     delete value.term
   if document.URL.search(/directionality\/html\//) == -1
     delete value.dir
+  if document.URL.search(/localefilter\/html\//) == -1
+    delete value.localeFilterList
+    delete value.localeFilterType
   value
 
 $ ->

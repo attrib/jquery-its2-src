@@ -1,6 +1,7 @@
 Version 1.2.0 (development)
 ===========================
 
+* attrib: Added locale filter data category support.
 * attrib: Added domain data category support.
 * attrib: Added directionality data category support.
 * attrib: Changing order in text analysis to be conferment with ITS 2.0 Testsuite

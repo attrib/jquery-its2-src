@@ -27,7 +27,7 @@ $.extend
     window.XPath = XPath
     globalRules = [new TranslateRule(), new LocalizationNoteRule(), new StorageSizeRule(), new AllowedCharactersRule(),
       new ParamRule(), new AnnotatorsRef(), new TextAnalysisRule(), new TerminologyRule(), new DirectionalityRule(),
-      new DomainRule()]
+      new DomainRule(), new LocaleFilterRule()]
     external_rules = $('link[rel="its-rules"]')
     window.rulesController = new RulesController(globalRules)
     window.rulesController.setContent $('html')
@@ -237,6 +237,73 @@ $.extend $.expr[':'],
           when "term"
             if (value.term and "no" == match[2]) or (!value.term and "yes" == match[2])
               return false
+
+          else
+            return false
+
+      return true
+
+    return false
+
+  localeFilter: (a, i, m) ->
+    query = if m[3] then m[3] else 'any'
+    value = window.rulesController.apply a, 'LocaleFilterRule'
+    if value.localeFilterList?
+      if query == 'any'
+        # don't return default
+        if value.localeFilterList == "*" and value.localeFilterType == 'include'
+          return false
+        else
+          return true
+
+      regExp = /(localeFilterList|localeFilterType|lang):[\s]?(["']?)([\w\- ,\*]+)\2(,|$)/gi
+      while match = regExp.exec(query)
+        switch(match[1])
+          when "localeFilterList"
+            if value.localeFilterList != match[3]
+              return false
+
+          when "localeFilterType"
+            if value.localeFilterType != match[3]
+              return false
+
+          when "lang"
+            match[3] = match[3].toLowerCase()
+            lang = match[3];
+            # removing one case
+            if value.localeFilterList == '*' and value.localeFilterType == 'include'
+              return false
+            if value.localeFilterList == '' and value.localeFilterType == 'exclude'
+              value.localeFilterList = '*'
+              value.localeFilterType = 'include'
+            value.localeFilterList = value.localeFilterList.toLowerCase()
+            if (lang == '*')
+              if value.localeFilterType != 'include' or value.localeFilterList != '*'
+                return false
+            else
+              lang = lang.split '-'
+              if lang.length != 2
+                return false
+              # include or exclude all languages
+              if value.localeFilterList == '*'
+                if value.localeFilterType != 'include'
+                  return false
+              # search language is in the language list
+              else if value.localeFilterList.indexOf(match[3]) != -1
+                if value.localeFilterType != 'include'
+                  return false
+              # language is included or excluded
+              else if value.localeFilterList.indexOf("#{lang[0]}-*") != -1
+                if value.localeFilterType != 'include'
+                  return false
+              # country is included or excluded
+              else if value.localeFilterList.indexOf("*-#{lang[1]}") != -1
+                if value.localeFilterType != 'include'
+                  return false
+              else if value.localeFilterType != 'include'
+                # do nothing here
+              else
+                return false
 
           else
             return false
