@@ -22,9 +22,14 @@
 
 $ = jQuery
 
+formatVal = (value) ->
+  if typeof value is "boolean"
+    value = if value then 'yes' else 'no'
+  value.replace /\n/g, ' '
+
 formatOutput = (value) ->
   if value instanceof Object
-    outputValue = ""
+    outputValue = []
     for key, val of value
       if key == 'annotatorsRef'
         annotators = []
@@ -33,14 +38,26 @@ formatOutput = (value) ->
           attribute = attribute.replace(/([A-Z])/g, "-$1").toLowerCase()
           annotators.push attribute + "|" + annotator
         val = annotators.sort().join(" ")
-        outputValue += "\t#{key}=\"#{val}\""
+        outputValue.push "\t#{key}=\"#{formatVal val}\""
       else if key == 'domains'
-        outputValue += "\t#{key}=\"#{val.join(", ")}\""
+        outputValue.push "\t#{key}=\"#{val.join(", ")}\""
+      else if key == 'locQualityIssues'
+        issues = ''
+        for count, issueObj of val
+          count++
+          issue = []
+          for k, v of issueObj
+            issue.push "\t#{k}[#{count}]=\"#{formatVal v}\""
+          issues += issue.sort().join ''
       else
-        if typeof val is "boolean"
-          val = if val then 'yes' else 'no'
-        val = val.replace /\n/g, ' '
-        outputValue += "\t#{key}=\"#{val}\""
+        outputValue.push "\t#{key}=\"#{formatVal val}\""
+    outputValue.sort (a,b) ->
+      return +1 if a > b
+      return -1 if a < b
+      return 0
+    if issues?
+      outputValue.push issues
+    return outputValue.join ''
   else
     outputValue = value
   if outputValue == 'default' then '' else outputValue

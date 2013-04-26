@@ -26,10 +26,19 @@ class Rule
   constructor: ->
     @rules = []
     @applied = {}
+    @standoff = []
 
   parse: (rule, content) => throw new Error('AbstractClass Rule: method parse not implemented.')
   apply: (node) => throw new Error('AbstractClass Rule: method apply not implemented.')
   def: -> throw new Error('AbstractClass Rule: method def not implemented.')
+  standoffMarkupXML: (rule, content, file) =>
+    return false
+
+  standoffMarkup: (content) =>
+    return false
+
+  addStandoff: (object) ->
+    @standoff.push object
 
   addSelector: (object) ->
     @rules.push(object)

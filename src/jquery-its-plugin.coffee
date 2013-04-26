@@ -27,7 +27,7 @@ $.extend
     window.XPath = XPath
     globalRules = [new TranslateRule(), new LocalizationNoteRule(), new StorageSizeRule(), new AllowedCharactersRule(),
       new ParamRule(), new AnnotatorsRef(), new TextAnalysisRule(), new TerminologyRule(), new DirectionalityRule(),
-      new DomainRule(), new LocaleFilterRule()]
+      new DomainRule(), new LocaleFilterRule(), new LocalizationQualityIssueRule()]
     external_rules = $('link[rel="its-rules"]')
     window.rulesController = new RulesController(globalRules)
     window.rulesController.setContent $('html')
@@ -39,6 +39,7 @@ $.extend
         rule = $.parseXML rule.childNodes[0].data
         if rule
           window.rulesController.addXML rule.childNodes[0]
+    window.rulesController.getStandoffMarkup()
     if callback
       callback(window.rulesController)
 
@@ -106,6 +107,8 @@ $.extend $.expr[':'],
           switch match[1]
             when "size"
               match2 = match[2].match /([<>!=]*)\s*(\d*)/
+              match2[2] = parseFloat match2[2]
+              value.storageSize = parseFloat value.storageSize
               if match2[2]
                 switch match2[1]
                   when "", "=", "=="
@@ -160,6 +163,8 @@ $.extend $.expr[':'],
         switch(match[1])
           when "taConfidence"
             match2 = match[2].match /([<>!=]*)\s*([\d\.]*)/
+            match2[2] = parseFloat match2[2]
+            value.taConfidence = parseFloat value.taConfidence
             if match2[2]
               switch match2[1]
                 when "", "=", "=="
@@ -213,6 +218,8 @@ $.extend $.expr[':'],
         switch(match[1])
           when "termConfidence"
             match2 = match[2].match /([<>!=]*)\s*([\d\.]*)/
+            match2[2] = parseFloat match2[2]
+            value.termConfidence = parseFloat value.termConfidence
             if match2[2]
               switch match2[1]
                 when "", "=", "=="
@@ -307,6 +314,78 @@ $.extend $.expr[':'],
 
           else
             return false
+
+      return true
+
+    return false
+
+  locQualityIssue: (a, i, m) ->
+    query = if m[3] then m[3] else 'any'
+    value = window.rulesController.apply a, 'LocalizationQualityIssueRule'
+    if (k for own k of value).length isnt 0
+      if query == 'any'
+          return true
+
+      matchQuery = (value, type, query) ->
+        switch(type)
+          when "locQualityIssueComment"
+            if value.locQualityIssueComment != query
+              return false
+
+          when "locQualityIssueEnabled"
+            return value.locQualityIssueEnabled == ( query == 'yes' )
+
+          when "locQualityIssueProfileRef"
+            if value.locQualityIssueProfileRef != query
+              return false
+
+          when "locQualityIssueType"
+            if value.locQualityIssueType != query
+              return false
+
+          when "locQualityIssuesRef"
+            if value.locQualityIssuesRef != query
+              return false
+
+          when "locQualityIssueSeverity"
+            match2 = query.match /([<>!=]*)\s*([\d\.]*)/
+            match2[2] = parseFloat match2[2]
+            if not value.locQualityIssueSeverity?
+              return false
+            value.locQualityIssueSeverity = parseFloat value.locQualityIssueSeverity
+            if match2[2]
+              switch match2[1]
+                when "", "=", "=="
+                  if value.locQualityIssueSeverity != match2[2]
+                    return false
+                when "!="
+                  if value.locQualityIssueSeverity == match2[2]
+                    return false
+                when ">"
+                  if value.locQualityIssueSeverity <= match2[2]
+                    return false
+                when "<"
+                  if value.locQualityIssueSeverity >= match2[2]
+                    return false
+                else
+                  return false
+
+          else
+            return false
+
+      regExp = /(locQualityIssueComment|locQualityIssueEnabled|locQualityIssueProfileRef|locQualityIssueSeverity|locQualityIssueType|locQualityIssuesRef):[\s]?(["']?)(.+)\2(,|$)/gi
+      while match = regExp.exec(query)
+        ret = matchQuery value, match[1], match[3]
+        if ret?
+          if !ret and value.locQualityIssues?
+            foundOne = false
+            for issue in value.locQualityIssues
+              ret = matchQuery issue, match[1], match[3]
+              if not ret?
+                foundOne = true
+            return foundOne
+          else
+            return ret
 
       return true
 

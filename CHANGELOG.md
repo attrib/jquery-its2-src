@@ -1,6 +1,7 @@
 Version 1.2.0 (development)
 ===========================
 
+* attrib: Added localization quality issue data category support.
 * attrib: Added locale filter data category support.
 * attrib: Added domain data category support.
 * attrib: Added directionality data category support.

@@ -31,14 +31,21 @@ class RulesController
     if link.href
       @getFile link.href
 
-  addXML: (xml) ->
+  addXML: (xml, file=null) ->
     # TODO: Schema Validation?
     if xml.tagName and xml.tagName.toLowerCase() is "its:rules" and ($(xml).attr('version') is "2.0" or $(xml).attr('its:version') is "2.0")
       @parseXML xml
     else
-      if xml.hasChildNodes
-        for child in xml.childNodes
-          @addXML child
+      # its no rules tag, maybe its a standoff markup, ask the rules, if the can handle it
+      found = false
+      for rule in @supportedRules
+        found = found or rule.standoffMarkupXML xml, @content, file if xml.nodeType is 1
+
+      # nobody can handle it, go deeper and test again, because its not defined where rules or standof markup has to be
+      if !found
+        if xml.hasChildNodes
+          for child in xml.childNodes
+            @addXML child, file
 
   parseXML: (xml) ->
     if xml.hasChildNodes
@@ -49,7 +56,7 @@ class RulesController
   getFile: (file) ->
     request = $.ajax file, {async: false}
     request.success (data) =>
-      @addXML data.childNodes[0]
+      @addXML data.childNodes[0], file
     request.error (jqXHR, textStatus, errorThrown) ->
       $('body').append "AJAX Error: #{file} (#{errorThrown})."
 
@@ -61,3 +68,8 @@ class RulesController
       ret[ruleName]
     else
       ret
+
+  getStandoffMarkup: () ->
+    for rule in @supportedRules
+      rule.standoffMarkup @content
+

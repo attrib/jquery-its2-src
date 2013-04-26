@@ -20,6 +20,7 @@ Currently supported data categories from ITS 2.0:
 * Directionality
 * Domain
 * Locale Filter
+* Localization Quality Issue
 
 Usage
 -----
@@ -185,8 +186,35 @@ $('*:localeFilter(lang: de-DE)')                      -> select all nodes which 
 $('*:localeFilter(lang: de-*)')                       -> You even can use * in the query here to,
                                                          see the detailed description from the standard
                                                          for more information
-$('*:localeFilter(termConfidence: >0.5, term: yes)')  -> matching query can be combined with , (comma)
+$('*:localeFilter(localeFilterType: include, localeFilterList: "de-DE, de-CH")')
+                                                      -> matching query can be combined with , (comma)
                                                          everything has to be true to be returned
+```
+
+### :locQualityIssue ###
+
+Selector for the [Localization Quality Issue](http://www.w3.org/TR/its20/#lqissue) data category.
+
+All queries also handles standoff markup. If a node has a reference to a standoff markup
+with multiple issues and the query is locQualityIssueSeverity: >50
+then the node will return true, if at least one issue satisfy this query.
+
+** For all selectors parseITS has to be run once before. **
+
+```
+$('*:locQualityIssue')                                         -> select all nodes which have a localization quality issue
+$('*:locQualityIssue(locQualityIssueComment: "a comment.")')   -> select all nodes which have a specific comment
+$('*:locQualityIssue(locQualityIssueEnabled: yes)')            -> select all nodes which are enabled (or not, when no)
+$('*:locQualityIssue(locQualityIssueProfileRef: "http://example.org/qaMovel/v1")')
+                                                               -> select all nodes which have a localization quality issue
+$('*:locQualityIssue(locQualityIssueSeverity: 50)')            -> select all nodes which have a severity of 50
+$('*:locQualityIssue(locQualityIssueSeverity: >50)')           -> select all nodes which have a severity above 50 (also supported are >,!=,<)
+$('*:locQualityIssue(locQualityIssueType: misspelling)')       -> select all nodes which have a specific type
+$('*:locQualityIssue(locQualityIssuesRef: locqualityissue9htmlstandoff.xml#lq1)')
+                                                               -> select all nodes which have a specific reference to standoff issues
+$('*:locQualityIssue(locQualityIssueSeverity: 50, locQualityIssueEnabled: yes)')
+                                                               -> matching query can be combined with , (comma)
+                                                                  everything has to be true to be returned
 ```
 
 Build
