@@ -25,7 +25,9 @@ $ = jQuery
 formatVal = (value) ->
   if typeof value is "boolean"
     value = if value then 'yes' else 'no'
-  value.replace /\n/g, ' '
+  if typeof value is "string"
+    value = value.replace /\n/g, ' '
+  value
 
 formatOutput = (value) ->
   if value instanceof Object

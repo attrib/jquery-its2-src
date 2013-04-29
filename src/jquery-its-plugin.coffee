@@ -27,7 +27,7 @@ $.extend
     window.XPath = XPath
     globalRules = [new TranslateRule(), new LocalizationNoteRule(), new StorageSizeRule(), new AllowedCharactersRule(),
       new ParamRule(), new AnnotatorsRef(), new TextAnalysisRule(), new TerminologyRule(), new DirectionalityRule(),
-      new DomainRule(), new LocaleFilterRule(), new LocalizationQualityIssueRule()]
+      new DomainRule(), new LocaleFilterRule(), new LocalizationQualityIssueRule(), new LocalizationQualityRatingRule()]
     external_rules = $('link[rel="its-rules"]')
     window.rulesController = new RulesController(globalRules)
     window.rulesController.setContent $('html')
@@ -108,8 +108,10 @@ $.extend $.expr[':'],
             when "size"
               match2 = match[2].match /([<>!=]*)\s*(\d*)/
               match2[2] = parseFloat match2[2]
+              if not value.storageSize?
+                return false
               value.storageSize = parseFloat value.storageSize
-              if match2[2]
+              if not isNaN(match2[2]) and not isNaN(value.storageSize)
                 switch match2[1]
                   when "", "=", "=="
                     if value.storageSize != match2[2]
@@ -164,8 +166,10 @@ $.extend $.expr[':'],
           when "taConfidence"
             match2 = match[2].match /([<>!=]*)\s*([\d\.]*)/
             match2[2] = parseFloat match2[2]
+            if not value.taConfidence?
+              return false
             value.taConfidence = parseFloat value.taConfidence
-            if match2[2]
+            if not isNaN(match2[2]) and not isNaN(value.taConfidence)
               switch match2[1]
                 when "", "=", "=="
                   if value.taConfidence != match2[2]
@@ -181,6 +185,8 @@ $.extend $.expr[':'],
                     return false
                 else
                   return false
+            else
+              return false
 
           when "taClassRef"
             if value.taClassRef != match[2]
@@ -219,8 +225,10 @@ $.extend $.expr[':'],
           when "termConfidence"
             match2 = match[2].match /([<>!=]*)\s*([\d\.]*)/
             match2[2] = parseFloat match2[2]
+            if not value.termConfidence?
+              return false
             value.termConfidence = parseFloat value.termConfidence
-            if match2[2]
+            if not isNaN(match2[2]) and not isNaN(value.termConfidence)
               switch match2[1]
                 when "", "=", "=="
                   if value.termConfidence != match2[2]
@@ -236,6 +244,8 @@ $.extend $.expr[':'],
                     return false
                 else
                   return false
+            else
+              return false
 
           when "termInfoRef"
             if value.termInfoRef != match[2]
@@ -353,7 +363,7 @@ $.extend $.expr[':'],
             if not value.locQualityIssueSeverity?
               return false
             value.locQualityIssueSeverity = parseFloat value.locQualityIssueSeverity
-            if match2[2]
+            if not isNaN(match2[2]) and not isNaN(value.locQualityIssueSeverity)
               switch match2[1]
                 when "", "=", "=="
                   if value.locQualityIssueSeverity != match2[2]
@@ -369,6 +379,8 @@ $.extend $.expr[':'],
                     return false
                 else
                   return false
+            else
+              return false
 
           else
             return false
@@ -386,6 +398,47 @@ $.extend $.expr[':'],
             return foundOne
           else
             return ret
+
+      return true
+
+    return false
+
+  locQualityRating: (a, i, m) ->
+    query = if m[3] then m[3] else 'any'
+    value = window.rulesController.apply a, 'LocalizationQualityRatingRule'
+    if (k for own k of value).length isnt 0
+      if query is 'any'
+        return true
+
+      query = query.split ','
+      for test in query
+        match = test.match /(locQualityRatingScore|locQualityRatingScoreThreshold|locQualityRatingVote|locQualityRatingVoteThreshold|locQualityRatingProfileRef):\s*(.*?)\s*$/
+        switch(match[1])
+          when "locQualityRatingProfileRef"
+            if value.locQualityRatingProfileRef != match[2]
+              return false
+
+          else
+            match2 = match[2].match /([<>!=]*)\s*([-\d\.]*)/
+            match2[2] = parseFloat match2[2]
+            if not isNaN(match2[2]) and value[match[1]]? and not isNaN(value[match[1]])
+              switch match2[1]
+                when "", "=", "=="
+                  if value[match[1]] != match2[2]
+                    return false
+                when "!="
+                  if value[match[1]] == match2[2]
+                    return false
+                when ">"
+                  if value[match[1]] <= match2[2]
+                    return false
+                when "<"
+                  if value[match[1]] >= match2[2]
+                    return false
+                else
+                  return false
+            else
+              return false
 
       return true
 

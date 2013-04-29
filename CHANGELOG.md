@@ -1,6 +1,8 @@
 Version 1.2.0 (development)
 ===========================
 
+* attrib: Fixed wrong number handling in jQuery selectors
+* attrib: Added localization quality rating data category support.
 * attrib: Added localization quality issue data category support.
 * attrib: Added locale filter data category support.
 * attrib: Added domain data category support.

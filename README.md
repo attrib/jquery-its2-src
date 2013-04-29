@@ -21,6 +21,7 @@ Currently supported data categories from ITS 2.0:
 * Domain
 * Locale Filter
 * Localization Quality Issue
+* Localization Quality Rating
 
 Usage
 -----
@@ -216,6 +217,25 @@ $('*:locQualityIssue(locQualityIssueSeverity: 50, locQualityIssueEnabled: yes)')
                                                                -> matching query can be combined with , (comma)
                                                                   everything has to be true to be returned
 ```
+
+### :locQualityRating ###
+
+Selector for the [Localization Quality Rating](http://www.w3.org/TR/its20/#lqrating) data category.
+
+** For all selectors parseITS has to be run once before. **
+
+```
+$('*:locQualityRating')                                         -> select all nodes which have a localization quality rating
+$('*:locQualityRating(locQualityIssueSeverity: 50)')            -> select all nodes which have a severity of 50
+$('*:locQualityRating(locQualityIssueSeverity: >50)')           -> select all nodes which have a severity above 50 (also supported are >,!=,<)
+$('*:locQualityRating(locQualityIssueType: misspelling)')       -> select all nodes which have a specific type
+$('*:locQualityRating(locQualityIssuesRef: locqualityissue9htmlstandoff.xml#lq1)')
+                                                               -> select all nodes which have a specific reference to standoff issues
+$('*:locQualityRating(locQualityIssueSeverity: 50, locQualityIssueEnabled: yes)')
+                                                               -> matching query can be combined with , (comma)
+                                                                  everything has to be true to be returned
+```
+
 
 Build
 -----
