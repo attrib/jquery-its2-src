@@ -49,7 +49,7 @@ class Rule
     for parent in parents
       xpath = new XPath parent
       if @applied[xpath.path]
-        return @applied[xpath.path]
+        return $.extend(true, {}, @applied[xpath.path])
 
   store: (node, object) =>
     xpath = new XPath node
