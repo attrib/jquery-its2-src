@@ -27,7 +27,8 @@ $.extend
     window.XPath = XPath
     globalRules = [new TranslateRule(), new LocalizationNoteRule(), new StorageSizeRule(), new AllowedCharactersRule(),
       new ParamRule(), new AnnotatorsRef(), new TextAnalysisRule(), new TerminologyRule(), new DirectionalityRule(),
-      new DomainRule(), new LocaleFilterRule(), new LocalizationQualityIssueRule(), new LocalizationQualityRatingRule()]
+      new DomainRule(), new LocaleFilterRule(), new LocalizationQualityIssueRule(), new LocalizationQualityRatingRule(),
+      new MTConfidenceRule()]
     external_rules = $('link[rel="its-rules"]')
     window.rulesController = new RulesController(globalRules)
     window.rulesController.setContent $('html')
@@ -419,6 +420,43 @@ $.extend $.expr[':'],
               return false
 
           else
+            match2 = match[2].match /([<>!=]*)\s*([-\d\.]*)/
+            match2[2] = parseFloat match2[2]
+            if not isNaN(match2[2]) and value[match[1]]? and not isNaN(value[match[1]])
+              switch match2[1]
+                when "", "=", "=="
+                  if value[match[1]] != match2[2]
+                    return false
+                when "!="
+                  if value[match[1]] == match2[2]
+                    return false
+                when ">"
+                  if value[match[1]] <= match2[2]
+                    return false
+                when "<"
+                  if value[match[1]] >= match2[2]
+                    return false
+                else
+                  return false
+            else
+              return false
+
+      return true
+
+    return false
+
+  mtConfidence: (a, i, m) ->
+    query = if m[3] then m[3] else 'any'
+    value = window.rulesController.apply a, 'MTConfidenceRule'
+    if (k for own k of value).length isnt 0
+      if query is 'any'
+        return true
+
+      query = query.split ','
+      for test in query
+        match = test.match /(mtConfidence):\s*(.*?)\s*$/
+        switch(match[1])
+          when "mtConfidence"
             match2 = match[2].match /([<>!=]*)\s*([-\d\.]*)/
             match2[2] = parseFloat match2[2]
             if not isNaN(match2[2]) and value[match[1]]? and not isNaN(value[match[1]])

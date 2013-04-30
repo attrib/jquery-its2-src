@@ -22,6 +22,7 @@ Currently supported data categories from ITS 2.0:
 * Locale Filter
 * Localization Quality Issue
 * Localization Quality Rating
+* MT Confidence
 
 Usage
 -----
@@ -236,6 +237,17 @@ $('*:locQualityRating(locQualityIssueSeverity: 50, locQualityIssueEnabled: yes)'
                                                                   everything has to be true to be returned
 ```
 
+### :mtConfidence ###
+
+Selector for the [MT Confidence](http://www.w3.org/TR/its20/#mtconfidence) data category.
+
+** For all selectors parseITS has to be run once before. **
+
+```
+$('*:mtConfidence')                               -> select all nodes which have a mt confidence rating
+$('*:mtConfidence(mtConfidence: 0.4)')            -> select all nodes which have a confidence of 0.4
+$('*:mtConfidence(mtConfidence: >0.4)')           -> select all nodes which have a confidence above 0.4 (also supported are >,!=,<)
+```
 
 Build
 -----
