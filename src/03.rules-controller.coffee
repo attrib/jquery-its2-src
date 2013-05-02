@@ -41,7 +41,7 @@ class RulesController
       for rule in @supportedRules
         found = found or rule.standoffMarkupXML xml, @content, file if xml.nodeType is 1
 
-      # nobody can handle it, go deeper and test again, because its not defined where rules or standof markup has to be
+      # nobody can handle it, go deeper and test again, because its not defined where rules or standoff markup has to be
       if !found
         if xml.hasChildNodes
           for child in xml.childNodes
@@ -56,7 +56,17 @@ class RulesController
   getFile: (file) ->
     request = $.ajax file, {async: false}
     request.success (data) =>
-      @addXML data.childNodes[0], file
+      # XML Content
+      if data.childNodes?
+        @addXML data.childNodes[0], file
+      # HTML Content
+      else
+        for element in $(data)
+          if element.nodeType? and element.nodeType is 1 and element.tagName? and element.tagName.toLowerCase() == 'script'
+            if $(element).attr('type') == "application/its+xml"
+              xml = $.parseXML element.childNodes[0].data
+              if xml
+                @addXML xml, file
     request.error (jqXHR, textStatus, errorThrown) ->
       $('body').append "AJAX Error: #{file} (#{errorThrown})."
 

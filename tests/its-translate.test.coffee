@@ -43,7 +43,7 @@ formatOutput = (value) ->
         outputValue.push "\t#{key}=\"#{formatVal val}\""
       else if key == 'domains'
         outputValue.push "\t#{key}=\"#{val.join(", ")}\""
-      else if key == 'locQualityIssues'
+      else if key == 'locQualityIssues' or key == 'provenanceRecords'
         issues = ''
         for count, issueObj of val
           count++

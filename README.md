@@ -23,6 +23,7 @@ Currently supported data categories from ITS 2.0:
 * Localization Quality Issue
 * Localization Quality Rating
 * MT Confidence
+* Provenance
 
 Usage
 -----
@@ -199,7 +200,7 @@ Selector for the [Localization Quality Issue](http://www.w3.org/TR/its20/#lqissu
 
 All queries also handles standoff markup. If a node has a reference to a standoff markup
 with multiple issues and the query is locQualityIssueSeverity: >50
-then the node will return true, if at least one issue satisfy this query.
+then the node will be returned, if at least one issue satisfy this query.
 
 ** For all selectors parseITS has to be run once before. **
 
@@ -247,6 +248,29 @@ Selector for the [MT Confidence](http://www.w3.org/TR/its20/#mtconfidence) data 
 $('*:mtConfidence')                               -> select all nodes which have a mt confidence rating
 $('*:mtConfidence(mtConfidence: 0.4)')            -> select all nodes which have a confidence of 0.4
 $('*:mtConfidence(mtConfidence: >0.4)')           -> select all nodes which have a confidence above 0.4 (also supported are >,!=,<)
+```
+
+### Provenance ###
+
+Selector for the [Provenance](http://www.w3.org/TR/its20/#provenance) data category.
+
+All queries also handles standoff markup. If a node has a reference to a standoff markup
+with multiple records and the query is person: John Doe
+then the node will be returned, if at least one record satisfy this query.
+
+```
+$('*:provenance')                                 -> select all nodes which have any provenance record
+$('*:provenance(person: Jon Doe)')                -> select all nodes which have a the specified person
+$('*:provenance(personRef: http://www.provdata.com/person/#John_Doe)')
+                                                  -> select all nodes which have a the specified person reference
+                Further possible keys you can use:
+                person, personRef, org, orgRef, tool, toolRef,
+                revPerson, revPersonRef, revOrg, revOrgRef, revTool, revToolRef,
+                provRef
+$('*:provenance(provenanceRecordsRef: #pr1)')     -> select all nodes which have the specified provenance records reference
+$('*:provenance(person: Jon Doe, org: acme-CAT-v2.3)')
+                                                  -> matching query can be combined with , (comma)
+                                                     everything has to be true to be returned
 ```
 
 Build

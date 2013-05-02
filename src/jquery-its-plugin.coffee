@@ -28,10 +28,11 @@ $.extend
     globalRules = [new TranslateRule(), new LocalizationNoteRule(), new StorageSizeRule(), new AllowedCharactersRule(),
       new ParamRule(), new AnnotatorsRef(), new TextAnalysisRule(), new TerminologyRule(), new DirectionalityRule(),
       new DomainRule(), new LocaleFilterRule(), new LocalizationQualityIssueRule(), new LocalizationQualityRatingRule(),
-      new MTConfidenceRule()]
-    external_rules = $('link[rel="its-rules"]')
+      new MTConfidenceRule(), new ProvenanceRule()]
     window.rulesController = new RulesController(globalRules)
     window.rulesController.setContent $('html')
+    window.rulesController.getStandoffMarkup()
+    external_rules = $('link[rel="its-rules"]')
     if external_rules
       window.rulesController.addLink rule for rule in external_rules
     internal_rules = $('script[type="application/its+xml"]')
@@ -40,7 +41,6 @@ $.extend
         rule = $.parseXML rule.childNodes[0].data
         if rule
           window.rulesController.addXML rule.childNodes[0]
-    window.rulesController.getStandoffMarkup()
     if callback
       callback(window.rulesController)
 
@@ -477,6 +477,31 @@ $.extend $.expr[':'],
                   return false
             else
               return false
+
+      return true
+
+    return false
+
+  provenance: (a, i, m) ->
+    query = if m[3] then m[3] else 'any'
+    value = window.rulesController.apply a, 'ProvenanceRule'
+    if (k for own k of value).length isnt 0
+      if query is 'any'
+        return true
+
+      query = query.split ','
+      for test in query
+        match = test.match /(person|personRef|org|orgRef|tool|toolRef|revPerson|revPersonRef|revOrg|revOrgRef|revTool|revToolRef|provRef|provenanceRecordsRef):\s*(.*?)\s*$/
+        if not value[match[1]]? or value[match[1]] != match[2]
+          if value.provenanceRecords
+            foundOne = false
+            for record in value.provenanceRecords
+              if record[match[1]]? and record[match[1]] == match[2]
+                foundOne = true
+            if !foundOne
+              return false
+          else
+            return false
 
       return true
 
