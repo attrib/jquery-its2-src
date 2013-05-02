@@ -1,6 +1,7 @@
 Version 1.2.0 (development)
 ===========================
 
+* attrib: Fixed wrong usage of relative selectors in most of all pointers.
 * attrib: Added MT Confidence data category support.
 * attrib: Fixed wrong inheritance
 * attrib: Fixed wrong number handling in jQuery selectors

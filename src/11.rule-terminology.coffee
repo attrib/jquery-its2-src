@@ -48,22 +48,26 @@ class TerminologyRule extends Rule
         xpath = new XPath content
         newRules = xpath.resolve object.selector, $(rule).attr 'termInfoPointer'
         for newRule in newRules
-          if newRule.result instanceof Attr then object.termInfo = newRule.result.value else object.termInfo = $(newRule.result).text()
-          rules.push object
+          newObject = $.extend(true, {}, object);
+          newObject.selector = newRule.selector
+          if newRule.result instanceof Attr then newObject.termInfo = newRule.result.value else newObject.termInfo = $(newRule.result).text()
+          rules.push newObject
 
       else if $(rule).attr 'termInfoRef'
         object.termInfoRef = $(rule).attr 'termInfoRef'
-        rules.push object
+        rules.push $.extend(true, {}, object)
 
       else if $(rule).attr 'termInfoRefPointer'
         xpath = new XPath content
         newRules = xpath.resolve object.selector, $(rule).attr 'termInfoRefPointer'
         for newRule in newRules
-          if newRule.result instanceof Attr then object.termInfoRef = newRule.result.value else object.termInfoRef = $(newRule.result).text()
-          rules.push object
+          newObject = $.extend(true, {}, object);
+          newObject.selector = newRule.selector
+          if newRule.result instanceof Attr then newObject.termInfoRef = newRule.result.value else newObject.termInfoRef = $(newRule.result).text()
+          rules.push newObject
 
       else
-        rules.push object
+        rules.push $.extend(true, {}, object)
 
       for ruleObject in rules
         if rules.term?

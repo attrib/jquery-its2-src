@@ -47,8 +47,10 @@ class TextAnalysisRule extends Rule
         xpath = new XPath content
         newRules = xpath.resolve object.selector, $(rule).attr 'taClassRefPointer'
         for newRule in newRules
-          if newRule.result instanceof Attr then object.taClassRef = newRule.result.value else object.taClassRef = $(newRule.result).text()
-          rules.push object
+          newObject = $.extend(true, {}, object);
+          if newRule.result instanceof Attr then newObject.taClassRef = newRule.result.value else newObject.taClassRef = $(newRule.result).text()
+          newObject.selector = newRule.selector
+          rules.push newObject
 
       # exaclty one of the following
       if $(rule).attr 'taIdentRefPointer'
@@ -56,19 +58,28 @@ class TextAnalysisRule extends Rule
         xpath = new XPath content
         newRules = xpath.resolve object.selector, $(rule).attr 'taIdentRefPointer'
         for newRule in newRules
-          if newRule.result instanceof Attr then object.taIdentRef = newRule.result.value else object.taIdentRef = $(newRule.result).text()
-          rules.push object
+          newObject = $.extend(true, {}, object);
+          newObject.selector = newRule.selector
+          if newRule.result instanceof Attr then newObject.taIdentRef = newRule.result.value else newObject.taIdentRef = $(newRule.result).text()
+          rules.push newObject
 
       else if $(rule).attr('taSourcePointer') and $(rule).attr('taIdentPointer')
         foundOne = true
         xpath = new XPath content
         newRules = xpath.resolve object.selector, $(rule).attr 'taSourcePointer'
         for newRule in newRules
-          if newRule.result instanceof Attr then object.taSource = newRule.result.value else object.taSource = $(newRule.result).text()
+          newObject = $.extend(true, {}, object);
+          newObject.selector = newRule.selector
+          if newRule.result instanceof Attr then newObject.taSource = newRule.result.value else newObject.taSource = $(newRule.result).text()
+          rules.push newObject
         newRules = xpath.resolve object.selector, $(rule).attr 'taIdentPointer'
         for newRule in newRules
-          if newRule.result instanceof Attr then object.taIdent = newRule.result.value else object.taIdent = $(newRule.result).text()
-          rules.push object
+          newObject = $.extend(true, {}, object);
+          newObject.selector = newRule.selector
+          if newRule.result instanceof Attr then newObject.taIdent = newRule.result.value else newObject.taIdent = $(newRule.result).text()
+          rules.push newObject
+          for ruleOb in rules
+            ruleOb = newObject.taIdent
 
       if !foundOne
         return

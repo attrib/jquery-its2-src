@@ -41,13 +41,15 @@ class StorageSizeRule extends Rule
       #one of following
       if $(rule).attr 'storageSize'
         object.storageSize = $(rule).attr 'storageSize'
-        rules.push object
+        rules.push $.extend(true, {}, object)
       else if $(rule).attr 'storageSizePointer'
         xpath = new XPath content
         newRules = xpath.resolve object.selector, $(rule).attr 'storageSizePointer'
         for newRule in newRules
-          if newRule.result instanceof Attr then object.storageSize = newRule.result.value else object.storageSize = $(newRule.result).text()
-          rules.push object
+          newObject = $.extend(true, {}, object);
+          if newRule.result instanceof Attr then newObject.storageSize = newRule.result.value else newObject.storageSize = $(newRule.result).text()
+          newObject.selector = newRule.selector
+          rules.push newObject
       else
         return
       #one or none of following
@@ -57,13 +59,13 @@ class StorageSizeRule extends Rule
       else if $(rule).attr 'storageEncodingPointer'
         xpath = new XPath content
         newRules = xpath.resolve object.selector, $(rule).attr 'storageEncodingPointer'
-        rulesTmp = []
         for newRule in newRules
           if newRule.result instanceof Attr then storageEncoding = newRule.result.value else storageEncoding = $(newRule.result).text()
+          newObject = $.extend(true, {}, object);
+          newObject.storageEncoding = storageEncoding
+          rules.push newObject
           for ruleObject in rules
             ruleObject.storageEncoding = storageEncoding
-            rulesTmp.push ruleObject
-        rules = rulesTmp;
       else
         for ruleObject in rules
           ruleObject.storageEncoding = 'UTF-8'

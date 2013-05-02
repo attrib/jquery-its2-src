@@ -49,8 +49,10 @@ class DomainRule extends Rule
             if (domain != '')
               domainArr.push domain
 
-          object.domains = domainArr
-          rules.push object
+          newObject = $.extend(true, {}, object);
+          newObject.selector = newRule.selector
+          newObject.domains = domainArr
+          rules.push newObject
 
       else
         return
