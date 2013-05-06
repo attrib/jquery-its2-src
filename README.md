@@ -24,6 +24,7 @@ Currently supported data categories from ITS 2.0:
 * Localization Quality Rating
 * MT Confidence
 * Provenance
+* External Resource
 
 Usage
 -----
@@ -271,6 +272,18 @@ $('*:provenance(provenanceRecordsRef: #pr1)')     -> select all nodes which have
 $('*:provenance(person: Jon Doe, org: acme-CAT-v2.3)')
                                                   -> matching query can be combined with , (comma)
                                                      everything has to be true to be returned
+```
+
+### External Resource ###
+
+Selector for the [External Resource](http://www.w3.org/TR/its20/#externalresource) data category.
+
+This selector is problematic currently, because often this is only on attribute base, but jQuery selector
+is on element base. This returns only elements, no attributes!
+
+```
+$('*:externalResource')                                 -> select all nodes which have any external resource
+$('*:externalResource(externalResourceRef: image.png)') -> select all nodes which have a specific external resource
 ```
 
 Build

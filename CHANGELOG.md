@@ -1,6 +1,8 @@
 Version 1.2.0 (development)
 ===========================
 
+* attrib: Added external resource data category support.
+* attrib: Fixed handling of attributes in xpath
 * attrib: Added provenance data category support.
 * attrib: Fixed wrong usage of relative selectors in most of all pointers.
 * attrib: Added MT Confidence data category support.
