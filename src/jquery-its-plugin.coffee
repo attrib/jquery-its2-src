@@ -575,3 +575,20 @@ $.extend $.expr[':'],
       return true
 
     return false
+
+  domain: (a, i, m) ->
+    query = if m[3] then m[3] else 'any'
+    value = window.rulesController.apply a, 'DomainRule'
+    if (k for own k of value).length isnt 0
+      if query is 'any'
+        return true
+
+      query = query.split ','
+      for test in query
+        match = test.match /(domain):\s*(.*?)\s*$/
+        if not value.domains? or value.domains.indexOf(match[2]) == -1
+          return false
+
+      return true
+
+    return false

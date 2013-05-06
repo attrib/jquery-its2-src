@@ -176,6 +176,17 @@ $('*:translate(ltr)')           -> select all nodes with dir = ltr
 $('*:translate(rtl)')            -> select all nodes with dir = rtl
 ```
 
+### :domain ###
+
+Selector for the [domain](http://www.w3.org/TR/its20/#domain) data category.
+
+** For all selectors parseITS has to be run once before. **
+
+```
+$('*:domain')                         -> select all nodes with any domain
+$('*:domain(domain: automotive)')     -> select all nodes with a specific domain
+```
+
 ### :localeFilter ###
 
 Selector for the [locale filter](http://www.w3.org/TR/its20/#LocaleFilter) data category.
