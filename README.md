@@ -11,23 +11,23 @@ There is also a bigger example repository ([jquery-its-example](https://github.c
 where you can highlight and edit ITS Data.
 
 Currently supported data categories from ITS 2.0:
-* [Translate][translate]
-* [Localization Note](locnote)
-* [Storage Size](storagesize)
-* [Allowed Characters](allowedcharacters)
-* [Text Analysis](textanalysis)
-* [Terminology](terminology)
-* [Directionality](dir)
-* [Domain](domain)
-* [Locale Filter](localefilter)
-* [Localization Quality Issue](locqualityissue)
-* [Localization Quality Rating](locqualityrating)
-* [MT Confidence](mtcnfidence)
-* [Provenance](provenance)
-* [External Resource](externalresource)
-* [Target Pointer](targetpointer)
-* [ID Value](idvalue)
-* [Language Information](lang)
+* [Translate](#translate)
+* [Localization Note](#locnote)
+* [Storage Size](#storagesize)
+* [Allowed Characters](#allowedcharacters)
+* [Text Analysis](#textanalysis)
+* [Terminology](#terminology)
+* [Directionality](#dir)
+* [Domain](#domain)
+* [Locale Filter](#localefilter)
+* [Localization Quality Issue](#locqualityissue)
+* [Localization Quality Rating](#locqualityrating)
+* [MT Confidence](#mtcnfidence)
+* [Provenance](#provenance)
+* [External Resource](#externalresource)
+* [Target Pointer](#targetpointer)
+* [ID Value](#idvalue)
+* [Language Information](#lang)
 
 Usage
 -----
