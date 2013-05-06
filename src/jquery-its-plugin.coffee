@@ -28,7 +28,7 @@ $.extend
     globalRules = [new TranslateRule(), new LocalizationNoteRule(), new StorageSizeRule(), new AllowedCharactersRule(),
       new ParamRule(), new AnnotatorsRef(), new TextAnalysisRule(), new TerminologyRule(), new DirectionalityRule(),
       new DomainRule(), new LocaleFilterRule(), new LocalizationQualityIssueRule(), new LocalizationQualityRatingRule(),
-      new MTConfidenceRule(), new ProvenanceRule(), new ExternalResourceRule()]
+      new MTConfidenceRule(), new ProvenanceRule(), new ExternalResourceRule(), new TargetPointerRule()]
     window.rulesController = new RulesController(globalRules)
     window.rulesController.setContent $('html')
     window.rulesController.getStandoffMarkup()
@@ -517,6 +517,23 @@ $.extend $.expr[':'],
       query = query.split ','
       for test in query
         match = test.match /(externalResourceRef):\s*(.*?)\s*$/
+        if not value[match[1]]? or value[match[1]] != match[2]
+          return false
+
+      return true
+
+    return false
+
+  targetPointer: (a, i, m) ->
+    query = if m[3] then m[3] else 'any'
+    value = window.rulesController.apply a, 'TargetPointerRule'
+    if (k for own k of value).length isnt 0
+      if query is 'any'
+        return true
+
+      query = query.split ','
+      for test in query
+        match = test.match /(target):\s*(.*?)\s*$/
         if not value[match[1]]? or value[match[1]] != match[2]
           return false
 

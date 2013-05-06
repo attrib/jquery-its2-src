@@ -25,6 +25,7 @@ Currently supported data categories from ITS 2.0:
 * MT Confidence
 * Provenance
 * External Resource
+* Target Pointer
 
 Usage
 -----
@@ -285,6 +286,16 @@ is on element base. This returns only elements, no attributes!
 $('*:externalResource')                                 -> select all nodes which have any external resource
 $('*:externalResource(externalResourceRef: image.png)') -> select all nodes which have a specific external resource
 ```
+
+### Target Pointer ###
+
+Selector for the [Target Pointer](http://www.w3.org/TR/its20/#target-pointer) data category.
+
+```
+$('*:targetPointer')                                 -> select all nodes which have any external resource
+$('*:targetPointer(target: image.png)') -> select all nodes which have a specific external resource
+```
+
 
 Build
 -----
