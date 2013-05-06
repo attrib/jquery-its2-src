@@ -11,23 +11,23 @@ There is also a bigger example repository ([jquery-its-example](https://github.c
 where you can highlight and edit ITS Data.
 
 Currently supported data categories from ITS 2.0:
-* [Translate][]
-* [Localization Note][]
-* [Storage Size][]
-* [Allowed Characters][]
-* [Text Analysis][]
-* [Terminology][]
-* [Directionality][]
-* [Domain][]
-* [Locale Filter][]
-* [Localization Quality Issue][]
-* [Localization Quality Rating][]
-* [MT Confidence][]
-* [Provenance][]
-* [External Resource][]
-* [Target Pointer][]
-* [ID Value][]
-* [Language Information][]
+* [Translate][translate]
+* [Localization Note](locnote)
+* [Storage Size](storagesize)
+* [Allowed Characters](allowedcharacters)
+* [Text Analysis](textanalysis)
+* [Terminology](terminology)
+* [Directionality](dir)
+* [Domain](domain)
+* [Locale Filter](localefilter)
+* [Localization Quality Issue](locqualityissue)
+* [Localization Quality Rating](locqualityrating)
+* [MT Confidence](mtcnfidence)
+* [Provenance](provenance)
+* [External Resource](externalresource)
+* [Target Pointer](targetpointer)
+* [ID Value](idvalue)
+* [Language Information](lang)
 
 Usage
 -----
@@ -254,7 +254,7 @@ $('*:mtConfidence(mtConfidence: 0.4)')            -> select all nodes which have
 $('*:mtConfidence(mtConfidence: >0.4)')           -> select all nodes which have a confidence above 0.4 (also supported are >,!=,<)
 ```
 
-### Provenance ###
+### :provenance ###
 
 Selector for the [Provenance](http://www.w3.org/TR/its20/#provenance) data category.
 
@@ -279,7 +279,7 @@ $('*:provenance(person: Jon Doe, org: acme-CAT-v2.3)')
                                                      everything has to be true to be returned
 ```
 
-### External Resource ###
+### :externalResource ###
 
 Selector for the [External Resource](http://www.w3.org/TR/its20/#externalresource) data category.
 
@@ -293,7 +293,7 @@ $('*:externalResource')                                 -> select all nodes whic
 $('*:externalResource(externalResourceRef: image.png)') -> select all nodes which have a specific external resource
 ```
 
-### Target Pointer ###
+### :targetPointer ###
 
 Selector for the [Target Pointer](http://www.w3.org/TR/its20/#target-pointer) data category.
 
@@ -304,7 +304,7 @@ $('*:targetPointer')                   -> select all nodes which have any target
 $('*:targetPointer(target: file.txt)') -> select all nodes which have a specific target
 ```
 
-### ID Value ###
+### :idValue ###
 
 Selector for the [ID Value](http://www.w3.org/TR/its20/#idvalue) data category.
 
@@ -318,7 +318,7 @@ $('*:idValue')                  -> select all nodes which have any id value
 $('*:idValue(idValue: btn.OK)') -> select all nodes which have a specific id
 ```
 
-### Language Information ###
+### :lang ###
 
 Selector for the [Language Information](http://www.w3.org/TR/its20/#language-information) data category.
 
