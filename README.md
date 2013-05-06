@@ -260,6 +260,8 @@ All queries also handles standoff markup. If a node has a reference to a standof
 with multiple records and the query is person: John Doe
 then the node will be returned, if at least one record satisfy this query.
 
+** For all selectors parseITS has to be run once before. **
+
 ```
 $('*:provenance')                                 -> select all nodes which have any provenance record
 $('*:provenance(person: Jon Doe)')                -> select all nodes which have a the specified person
@@ -280,7 +282,9 @@ $('*:provenance(person: Jon Doe, org: acme-CAT-v2.3)')
 Selector for the [External Resource](http://www.w3.org/TR/its20/#externalresource) data category.
 
 This selector is problematic currently, because often this is only on attribute base, but jQuery selector
-is on element base. This returns only elements, no attributes!
+is on element base. ** This returns only elements, no attributes! **
+
+** For all selectors parseITS has to be run once before. **
 
 ```
 $('*:externalResource')                                 -> select all nodes which have any external resource
@@ -291,9 +295,25 @@ $('*:externalResource(externalResourceRef: image.png)') -> select all nodes whic
 
 Selector for the [Target Pointer](http://www.w3.org/TR/its20/#target-pointer) data category.
 
+** For all selectors parseITS has to be run once before. **
+
 ```
-$('*:targetPointer')                                 -> select all nodes which have any external resource
-$('*:targetPointer(target: image.png)') -> select all nodes which have a specific external resource
+$('*:targetPointer')                   -> select all nodes which have any target
+$('*:targetPointer(target: file.txt)') -> select all nodes which have a specific target
+```
+
+### ID Value ###
+
+Selector for the [ID Value](http://www.w3.org/TR/its20/#idvalue) data category.
+
+This should only be used, if you use for what reasons ever not the id attribute.
+** But it is strongly recommended to use the id attribute. **
+
+** For all selectors parseITS has to be run once before. **
+
+```
+$('*:idValue')                  -> select all nodes which have any id value
+$('*:idValue(idValue: btn.OK)') -> select all nodes which have a specific id
 ```
 
 

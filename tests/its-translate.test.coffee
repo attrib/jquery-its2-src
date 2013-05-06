@@ -77,6 +77,8 @@ deleteValuesDependingOnTests = (value) ->
   if document.URL.search(/localefilter\/html\//) == -1
     delete value.localeFilterList
     delete value.localeFilterType
+  if document.URL.search(/idvalue\/html\//) == -1
+    delete value.idValue
   value
 
 $ ->

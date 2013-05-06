@@ -1,6 +1,7 @@
 Version 1.2.0 (development)
 ===========================
 
+* attrib: Added id value data category support.
 * attrib: Added target pointer data category support.
 * attrib: Added external resource data category support.
 * attrib: Fixed handling of attributes in xpath
