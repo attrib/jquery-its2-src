@@ -40,18 +40,31 @@ class XPath
 
   parents: =>
     parentPath = ""
-    $.each @element.parents().get().reverse(), (i, parent) =>
+    if @element.get(0) instanceof Attr
+      parents = $(@element.get(0).ownerElement).parents().get().reverse()
+    else
+      parents = @element.parents().get().reverse()
+    $.each parents, (i, parent) =>
       parentPath = parentPath.concat @index(parent)
     parentPath
 
   index: (element) ->
+    if element instanceof Attr
+      attribute = element
+      element = element.ownerElement
     nodeName = element.nodeName.toLowerCase()
     prevSiblings = $(element).prevAll(nodeName)
     position = prevSiblings.length + 1
+
     if $(element).parents().length == 0
-      "/#{nodeName}"
+      string = "/#{nodeName}"
     else
-      "/#{nodeName}[#{position}]"
+      string = "/#{nodeName}[#{position}]"
+    if attribute?
+      attributeName = attribute.nodeName || attribute.name
+      string += "/@#{attributeName.toLowerCase()}"
+    string
+
 
   filter: (selector) ->
     # TODO: Try to use the correct namespace in @query
@@ -59,8 +72,6 @@ class XPath
 
   query: (selector, resultType) ->
     domElement = @element.get(0)
-    if domElement instanceof Attr
-      domElement = domElement.ownerElement
     document.evaluate selector, domElement, null, resultType, null
 
   process: (selector) ->
