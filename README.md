@@ -11,21 +11,23 @@ There is also a bigger example repository ([jquery-its-example](https://github.c
 where you can highlight and edit ITS Data.
 
 Currently supported data categories from ITS 2.0:
-* Translate
-* Localization Note
-* Storage Size
-* Allowed Characters
-* Text Analysis
-* Terminology
-* Directionality
-* Domain
-* Locale Filter
-* Localization Quality Issue
-* Localization Quality Rating
-* MT Confidence
-* Provenance
-* External Resource
-* Target Pointer
+* [Translate][]
+* [Localization Note][]
+* [Storage Size][]
+* [Allowed Characters][]
+* [Text Analysis][]
+* [Terminology][]
+* [Directionality][]
+* [Domain][]
+* [Locale Filter][]
+* [Localization Quality Issue][]
+* [Localization Quality Rating][]
+* [MT Confidence][]
+* [Provenance][]
+* [External Resource][]
+* [Target Pointer][]
+* [ID Value][]
+* [Language Information][]
 
 Usage
 -----
@@ -314,6 +316,17 @@ This should only be used, if you use for what reasons ever not the id attribute.
 ```
 $('*:idValue')                  -> select all nodes which have any id value
 $('*:idValue(idValue: btn.OK)') -> select all nodes which have a specific id
+```
+
+### Language Information ###
+
+Selector for the [Language Information](http://www.w3.org/TR/its20/#language-information) data category.
+
+** For all selectors parseITS has to be run once before. **
+
+```
+$('*:lang')              -> select all nodes which have any language
+$('*:lang(lang: fr-CA)') -> select all nodes which have a specific language
 ```
 
 
