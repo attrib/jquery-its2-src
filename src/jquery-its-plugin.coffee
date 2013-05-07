@@ -29,7 +29,7 @@ $.extend
       new ParamRule(), new AnnotatorsRef(), new TextAnalysisRule(), new TerminologyRule(), new DirectionalityRule(),
       new DomainRule(), new LocaleFilterRule(), new LocalizationQualityIssueRule(), new LocalizationQualityRatingRule(),
       new MTConfidenceRule(), new ProvenanceRule(), new ExternalResourceRule(), new TargetPointerRule(), new IdValueRule(),
-      new LanguageInformationRule()]
+      new LanguageInformationRule(), new ElementsWithinTextRule()]
     window.rulesController = new RulesController(globalRules)
     window.rulesController.setContent $('html')
     window.rulesController.getStandoffMarkup()
@@ -587,6 +587,26 @@ $.extend $.expr[':'],
       for test in query
         match = test.match /(domain):\s*(.*?)\s*$/
         if not value.domains? or value.domains.indexOf(match[2]) == -1
+          return false
+
+      return true
+
+    return false
+
+  withinText: (a, i, m) ->
+    query = if m[3] then m[3] else 'any'
+    value = window.rulesController.apply a, 'ElementsWithinTextRule'
+    if (k for own k of value).length isnt 0
+      if query is 'any'
+        if value.withinText != 'no'
+          return true
+        else
+          return false
+
+      query = query.split ','
+      for test in query
+        match = test.match /(withinText):\s*(.*?)\s*$/
+        if not value[match[1]]? or value[match[1]] != match[2]
           return false
 
       return true

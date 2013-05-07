@@ -28,6 +28,7 @@ Currently supported data categories from ITS 2.0:
 * [Target Pointer](#targetpointer)
 * [ID Value](#idvalue)
 * [Language Information](#lang)
+* [Elements Within Test](#withinText)
 
 Usage
 -----
@@ -340,6 +341,16 @@ $('*:lang')              -> select all nodes which have any language
 $('*:lang(lang: fr-CA)') -> select all nodes which have a specific language
 ```
 
+### :withinText ###
+
+Selector for the [Elements Within Text](http://www.w3.org/TR/its20/#elements-within-text) data category.
+
+** For all selectors parseITS has to be run once before. **
+
+```
+$('*:withinText')                  -> select all nodes with withinText="yes" or "nested"
+$('*:withinText(withinText: yes)') -> select all nodes which have a specific withinText value
+```
 
 Build
 -----
