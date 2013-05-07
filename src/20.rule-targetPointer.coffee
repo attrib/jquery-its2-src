@@ -35,13 +35,17 @@ class TargetPointerRule extends Rule
       object.type = @NAME
       # at least one of the following
       if $(rule).attr 'targetPointer'
+        object.targetPointer = $(rule).attr 'targetPointer'
         xpath = new XPath content
-        newRules = xpath.resolve object.selector, $(rule).attr 'targetPointer'
-        for newRule in newRules
-          newObject = $.extend(true, {}, object);
-          if newRule.result instanceof Attr then newObject.target = newRule.result.value else newObject.target = $(newRule.result).text()
-          newObject.selector = newRule.selector
-          rules.push newObject
+        newRules = xpath.resolve object.selector, object.targetPointer
+        if newRules.length > 0
+          for newRule in newRules
+            newObject = $.extend(true, {}, object)
+            if newRule.result instanceof Attr then newObject.target = newRule.result.value else newObject.target = $(newRule.result).text()
+            newObject.selector = newRule.selector
+            rules.push newObject
+        else
+          rules.push object
 
       else
         return
@@ -61,6 +65,8 @@ class TargetPointerRule extends Rule
         if xpath.process rule.selector
           if rule.target
             ret.target = rule.target
+          if rule.targetPointer
+            ret.targetPointer = rule.targetPointer
     # 3. no inheritance
     # 4. no local attributes
     # ...and return
