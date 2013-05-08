@@ -345,11 +345,33 @@ $('*:lang(lang: fr-CA)') -> select all nodes which have a specific language
 
 Selector for the [Elements Within Text](http://www.w3.org/TR/its20/#elements-within-text) data category.
 
+Also see getITSSplitText for a function to get text, split correctly depending on withinText values.
+
 ** For all selectors parseITS has to be run once before. **
 
 ```
 $('*:withinText')                  -> select all nodes with withinText="yes" or "nested"
 $('*:withinText(withinText: yes)') -> select all nodes which have a specific withinText value
+```
+
+### getITSSplitText() ###
+
+Special function for the [Elements Within Text](http://www.w3.org/TR/its20/#elements-within-text) data category.
+
+Returns a list of text which should be translated from the input values.
+This function splits the text correctly depending on the within Text values.
+
+```
+<div withinText="no">
+  <p withinText="no">Hello <span withinText="yes">World!</span></p>
+  <p withinText="no">I could have cite <cite withinText="nested">A HTML attribute ...</cite> inside my Text.</p>
+</div>
+```
+
+```
+$('div').getITSSplitText() == ['Hello <span withinText="yes">World!</span>', 'A HTML attribute ...', 'I could have cite inside my Text.']
+$('p:last').getITSSplitText() == ['A HTML attribute ...', 'I could have cite inside my Text.']
+$('span') == ['Hello <span withinText="yes">World!</span>']
 ```
 
 Build

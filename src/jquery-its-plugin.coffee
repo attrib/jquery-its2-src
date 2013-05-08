@@ -74,6 +74,41 @@ $.fn.extend
             annotator.push ruleAnnotator
     annotator
 
+  getITSSplitText: () ->
+    texts = []
+    prepareText = (text) ->
+      text.replace /^\s*|\s*$/g, ''
+
+    splitText = (element, nested = false) ->
+      value = window.rulesController.apply element, 'ElementsWithinTextRule'
+      if value.withinText == 'no'
+        if element.childNodes.length > 0
+          text = ""
+          for child in element.childNodes
+            if child.nodeType is 1
+              if splitText child, true
+                text += " " + prepareText $('<div></div>').append($(child).clone()).html()
+            else
+              text += " " + prepareText child.nodeValue
+
+          if text != ""
+            texts.push prepareText text
+        else
+          texts.push prepareText $(element).html()
+      else if value.withinText == 'nested'
+        texts.push prepareText $(element).html()
+      else if value.withinText == 'yes'
+        if not nested
+          splitText element.parentNode
+        else
+          return true
+
+      return false
+
+    for element in this
+      splitText element
+
+    texts
 
 $.extend $.expr[':'],
   translate: (a, i, m) ->
