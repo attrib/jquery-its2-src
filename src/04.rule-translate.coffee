@@ -37,7 +37,9 @@ class TranslateRule extends Rule
   apply: (tag) =>
     # Precedence order
     # 1. Default
-    ret = if tag instanceof Attr then @defAttr() else @def()
+    ret = @def(tag)
+    if ret.translate is false
+      return ret
     # 2. Rules in the schema
     xpath = new XPath tag
     for rule in @rules
@@ -46,7 +48,10 @@ class TranslateRule extends Rule
           ret = { translate: rule.translate }
           @store tag, ret
     # 3. Rules in the document instance (inheritance)
-    value = @inherited tag
+    if tag instanceof Attr
+      value = @inherited tag.ownerElement
+    else
+      value = @inherited tag
     if value instanceof Object then ret = value
     # 4. Local attributes
     if (!(tag instanceof Attr) and tag.hasAttribute(@NAME) and $(tag).attr(@NAME) != undefined)
@@ -54,8 +59,26 @@ class TranslateRule extends Rule
     # ...and return
     ret
 
-  def: ->
-    { translate: true }
+  def: (tag) ->
+    if tag instanceof Attr
+      if tag.nodeName.toLowerCase() is 'abr' and tag.ownerElement.nodeName.toLowerCase() is 'th'
+        return { translate: true }
+      else if tag.nodeName.toLowerCase() is 'alt' and tag.ownerElement.nodeName.toLowerCase() in ['area', 'img', 'input']
+        return { translate: true }
+      else if tag.nodeName.toLowerCase() is 'content' and tag.ownerElement.nodeName.toLowerCase() is 'meta'
+        return { translate: true }
+      else if tag.nodeName.toLowerCase() is 'download' and tag.ownerElement.nodeName.toLowerCase() in ['a', 'area']
+        return { translate: true }
+      else if tag.nodeName.toLowerCase() is 'label' and tag.ownerElement.nodeName.toLowerCase() in ['menuitem', 'menu', 'optgroup', 'option', 'track']
+        return { translate: true }
+      else if tag.nodeName.toLowerCase() in ['lang', 'style', 'title', 'aria-label', 'aria-valuetext']
+        return { translate: true }
+      else if tag.nodeName.toLowerCase() is 'placeholder' and tag.ownerElement.nodeName.toLowerCase() in ['input', 'textarea']
+        return { translate: true }
+      else if tag.nodeName.toLowerCase() is 'srcdoc' and tag.ownerElement.nodeName.toLowerCase() is 'iframe'
+        return { translate: true }
+      else
+        return { translate: false }
+    else
+      return { translate: true }
 
-  defAttr: ->
-    { translate: false }

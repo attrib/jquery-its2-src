@@ -1,6 +1,7 @@
 Version 1.2.0 (development)
 ===========================
 
+* attrib: Changed translate data category to use HTML defaults.
 * attrib: Added getITSSplitText() function.
 * attrib: Added elements within text data category support.
 * attrib: Added language information data category support.
