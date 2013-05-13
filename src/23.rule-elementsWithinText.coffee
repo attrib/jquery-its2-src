@@ -71,14 +71,11 @@ class ElementsWithinTextRule extends Rule
     ret
 
   def: (tag) ->
-#    if tag instanceof Attr or not tag.nodeName.toLowerCase() in ['a', 'abbr', 'area', 'audio', 'b', 'bdi', 'bdo', 'br', 'button', 'canvas', 'cite', 'code', 'command', 'datalist', 'del', 'dfn', 'em', 'embed', 'i', 'iframe', 'img', 'input', 'ins', 'kbd', 'keygen', 'label', 'map', 'mark', 'math', 'meter', 'noscript', 'object', 'output', 'progress', 'q', 'ruby', 's', 'samp', 'script', 'select', 'small', 'span', 'strong', 'sub', 'sup', 'svg', 'textarea', 'time', 'u', 'var', 'video', 'wbr']
-#      {
-#        withinText: 'no'
-#      }
-#    else
-#      {
-#        withinText: 'yes'
-#      }
-    {
-      withinText: 'no'
-    }
+    if tag instanceof Attr or tag.nodeName.toLowerCase() not in ['a', 'abbr', 'area', 'audio', 'b', 'bdi', 'bdo', 'br', 'button', 'canvas', 'cite', 'code', 'command', 'datalist', 'del', 'dfn', 'em', 'embed', 'i', 'iframe', 'img', 'input', 'ins', 'kbd', 'keygen', 'label', 'map', 'mark', 'math', 'meter', 'noscript', 'object', 'output', 'progress', 'q', 'ruby', 's', 'samp', 'script', 'select', 'small', 'span', 'strong', 'sub', 'sup', 'svg', 'textarea', 'time', 'u', 'var', 'video', 'wbr']
+      {
+        withinText: 'no'
+      }
+    else
+      {
+        withinText: 'yes'
+      }
