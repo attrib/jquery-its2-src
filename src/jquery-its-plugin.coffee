@@ -25,8 +25,8 @@ $ = jQuery
 $.extend
   parseITS: (callback) ->
     window.XPath = XPath
-    globalRules = [new TranslateRule(), new LocalizationNoteRule(), new StorageSizeRule(), new AllowedCharactersRule(),
-      new ParamRule(), new AnnotatorsRef(), new TextAnalysisRule(), new TerminologyRule(), new DirectionalityRule(),
+    globalRules = [new ParamRule(), new TranslateRule(), new LocalizationNoteRule(), new StorageSizeRule(),
+      new AllowedCharactersRule(), new AnnotatorsRef(), new TextAnalysisRule(), new TerminologyRule(), new DirectionalityRule(),
       new DomainRule(), new LocaleFilterRule(), new LocalizationQualityIssueRule(), new LocalizationQualityRatingRule(),
       new MTConfidenceRule(), new ProvenanceRule(), new ExternalResourceRule(), new TargetPointerRule(), new IdValueRule(),
       new LanguageInformationRule(), new ElementsWithinTextRule()]

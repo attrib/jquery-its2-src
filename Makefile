@@ -1,4 +1,4 @@
-SRC=$(wildcard src/*.coffee)
+SRC=src/xpath.coffee src/rules.coffee src/rules-controller.coffee src/rule-param.coffee $(wildcard src/rules/*.coffee) src/jquery-its-plugin.coffee
 TEST=$(wildcard tests/*.coffee)
 BUILD=$(SRC:src/%.coffee=build/%.js)
 TESTS=$(TEST:tests/%.coffee=tests/%.js)
