@@ -36,13 +36,8 @@ class AnnotatorsRef extends Rule
     # 1. Default
     ret = @def()
     # 2. no rules
-    # 3. Inheritance
     # 3. Rules in the document instance (inheritance)
-    if tag instanceof Attr
-      value = @inherited tag.ownerElement
-    else
-      value = @inherited tag
-    if value instanceof Object then ret = value
+    @applyInherit ret, tag, true
     # 4. Local attributes
     if $(tag).attr @attributeName
       values = $(tag).attr @attributeName

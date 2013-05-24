@@ -31,8 +31,7 @@ class LocalizationNoteRule extends Rule
       locNoteType: 'its-loc-note-type'
     }
 
-  createLocalizationNote: (selector, locNoteType, locNote, ref = false) ->
-    # TODO: Default values
+  createRule: (selector, locNoteType, locNote, ref = false) ->
     object = {}
     object.type = @NAME
     object.selector = selector
@@ -41,7 +40,7 @@ class LocalizationNoteRule extends Rule
     else
       object.locNote = locNote.trim()
     # It should be (description || alert)
-    object.locNoteType = @normalizeType locNoteType
+    object.locNoteType = @normalizeString locNoteType
     object
 
   parse: (rule, content) ->
@@ -54,47 +53,33 @@ class LocalizationNoteRule extends Rule
         newRules = xpath.resolve $(rule).attr('selector'), $(rule).attr('locNotePointer')
         for newRule in newRules
           if newRule.result instanceof Attr then locNote = newRule.result.value else locNote = $(newRule.result).text()
-          @addSelector @createLocalizationNote newRule.selector, $(rule).attr('locNoteType'), $(newRule.result).text()
+          @addSelector @createRule newRule.selector, $(rule).attr('locNoteType'), $(newRule.result).text()
       else if $(rule).attr('locNoteRef')
-        @addSelector @createLocalizationNote $(rule).attr('selector'), $(rule).attr('locNoteType'), $(rule).attr('locNoteRef'), true
+        @addSelector @createRule $(rule).attr('selector'), $(rule).attr('locNoteType'), $(rule).attr('locNoteRef'), true
       else if $(rule).attr('locNoteRefPointer')
         xpath = new XPath content
         newRules = xpath.resolve $(rule).attr('selector'), $(rule).attr('locNoteRefPointer')
         for newRule in newRules
           if newRule.result instanceof Attr then locNote = newRule.result.value else locNote = $(newRule.result).text()
-          @addSelector @createLocalizationNote newRule.selector, $(rule).attr('locNoteType'), locNote, true
+          @addSelector @createRule newRule.selector, $(rule).attr('locNoteType'), locNote, true
       else
         if ($(rule).children().length > 0) and ($(rule).children()[0].tagName.toLowerCase() == 'its:locnote')
-          @addSelector @createLocalizationNote $(rule).attr('selector'), $(rule).attr('locNoteType'), $(rule).children().text()
+          @addSelector @createRule $(rule).attr('selector'), $(rule).attr('locNoteType'), $(rule).children().text()
 
   apply: (tag) ->
     # Precedence order
     # 1. Default
     ret = @def()
     # 2. Rules in the schema
-    xpath = new XPath tag
-    for rule in @rules
-      if rule.type == @NAME
-        if xpath.process rule.selector
-          if rule.locNoteRef
-            ret.locNoteRef = rule.locNoteRef
-          if rule.locNote
-            ret.locNote = rule.locNote
-          if rule.locNoteType
-            ret.locNoteType = rule.locNoteType
+    @applyRules ret, tag, ['locNoteRef', 'locNote', 'locNoteType']
     # 3. Rules in the document instance (inheritance)
-    # TODO: Not implemented
+    @applyInherit ret, tag
     # 4. Local attributes
-    for objectName, attributeName of @attributes
-      if $(tag).attr attributeName
-        ret[objectName] = $(tag).attr attributeName
+    @applyAttributes ret, tag
     # ...and return
     if ret.locNoteType?
-      ret.locNoteType = @normalizeType ret.locNoteType
+      ret.locNoteType = @normalizeString ret.locNoteType
     ret
 
   def: ->
     {}
-
-  normalizeType: (type) ->
-    type.toLowerCase()

@@ -30,19 +30,18 @@ class ElementsWithinTextRule extends Rule
       withinText: 'its-within-text',
     }
 
+  createRule: (selector, withinText) ->
+    object = {}
+    object.selector = selector
+    object.type = @NAME
+    object.withinText = @normalizeString withinText
+    object
+
   parse: (rule, content) ->
     if rule.tagName.toLowerCase() is @RULE_NAME
-      object = {}
-      object.selector = $(rule).attr 'selector'
-      object.type = @NAME
+      if $(rule).attr('withinText') and $(rule).attr('selector')
+        @addSelector @createRule $(rule).attr('selector'), $(rule).attr('withinText')
 
-      if $(rule).attr 'withinText'
-        object.withinText = $(rule).attr 'withinText'
-
-      else
-        return
-
-      @addSelector object
 
   apply: (tag) =>
     # Precedence order
@@ -51,31 +50,32 @@ class ElementsWithinTextRule extends Rule
       return {}
     ret = @def(tag)
     # 2. Rules in the schema
-    xpath = new XPath tag
-    for rule in @rules
-      if rule.type = @NAME
-        if xpath.process rule.selector
-          if rule.withinText
-            ret.withinText = rule.withinText
+    @applyRules ret, tag, ['withinText']
     # 3. no inheritance
     # 4. Local attributes
-    for objectName, attributeName of @attributes
-      if $(tag).attr attributeName
-        ret[objectName] = $(tag).attr attributeName
+    @applyAttributes ret, tag
     # Conformance
     if ret.withinText?
-      ret.withinText = ret.withinText.toLowerCase()
+      ret.withinText = @normalizeString ret.withinText
       if not ret.withinText in ['yes', 'nested', 'no']
         ret.withinText = @def(tag)
     # ...and return
     ret
 
   def: (tag) ->
-    if tag instanceof Attr or tag.nodeName.toLowerCase() not in ['a', 'abbr', 'area', 'audio', 'b', 'bdi', 'bdo', 'br', 'button', 'canvas', 'cite', 'code', 'command', 'datalist', 'del', 'dfn', 'em', 'embed', 'i', 'iframe', 'img', 'input', 'ins', 'kbd', 'keygen', 'label', 'map', 'mark', 'math', 'meter', 'noscript', 'object', 'output', 'progress', 'q', 'ruby', 's', 'samp', 'script', 'select', 'small', 'span', 'strong', 'sub', 'sup', 'svg', 'textarea', 'time', 'u', 'var', 'video', 'wbr']
-      {
-        withinText: 'no'
-      }
-    else
-      {
-        withinText: 'yes'
-      }
+    if $(tag).parents('body').length > 0
+      if tag.nodeName.toLowerCase() in ['a', 'abbr', 'area', 'audio', 'b', 'bdi', 'bdo',
+        'br', 'button', 'canvas', 'cite', 'code', 'command', 'datalist', 'del', 'dfn',
+        'em', 'embed', 'i', 'img', 'input', 'ins', 'kbd', 'keygen', 'label', 'map', 'mark',
+        'math', 'meter', 'object', 'output', 'progress', 'q', 'ruby', 's', 'samp', 'select',
+        'small', 'span', 'strong', 'sub', 'sup', 'svg', 'time', 'u', 'var', 'video', 'wbr']
+        return {
+          withinText: 'yes'
+        }
+      else if tag.nodeName.toLowerCase() in ['iframe', 'noscript', 'script', 'textarea']
+        return {
+          withinText: 'nested'
+        }
+    return {
+      withinText: 'no'
+    }

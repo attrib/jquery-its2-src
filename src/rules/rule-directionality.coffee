@@ -26,31 +26,25 @@ class DirectionalityRule extends Rule
     @RULE_NAME = 'its:dirrule'
     @NAME = 'dir'
 
+  createRule: (selector, dir) ->
+    object = {}
+    object.selector = selector
+    object.type = @NAME
+    object.dir = dir
+    object
+
   parse: (rule, content) =>
     if rule.tagName.toLowerCase() is @RULE_NAME
-      object = {}
-      object.selector = $(rule).attr('selector')
-      object.type = @NAME
-      object.dir = $(rule).attr(@NAME)
-      @addSelector object
+      @addSelector @createRule $(rule).attr('selector'), $(rule).attr(@NAME)
 
   apply: (tag) =>
     # Precedence order
     # 1. Default
     ret = @def()
     # 2. Rules in the schema
-    xpath = new XPath tag
-    for rule in @rules
-      if rule.type = @NAME
-        if xpath.process rule.selector
-          ret = { dir: rule.dir }
-          @store tag, ret
+    @applyRules ret, tag, ['dir']
     # 3. Rules in the document instance (inheritance)
-    if tag instanceof Attr
-      value = @inherited tag.ownerElement
-    else
-      value = @inherited tag
-    if value instanceof Object then ret = value
+    @applyInherit ret, tag, true
     # 4. Local attributes
     if (!(tag instanceof Attr) and tag.hasAttribute(@NAME) and $(tag).attr(@NAME) != undefined)
       ret = { dir: $(tag).attr(@NAME) }

@@ -26,16 +26,21 @@ class DomainRule extends Rule
     @RULE_NAME = 'its:domainrule'
     @NAME = 'domains'
 
+  createRule: (selector, domains) ->
+    object = {}
+    object.selector = selector
+    object.type = @NAME
+    object.domains = domains
+    object
+
   parse: (rule, content) =>
     if rule.tagName.toLowerCase() is @RULE_NAME
+      selector = $(rule).attr('selector')
       rules = []
-      object = {}
-      object.selector = $(rule).attr('selector')
-      object.type = @NAME
 
       if $(rule).attr 'domainPointer'
         xpath = new XPath content
-        newRules = xpath.resolve object.selector, $(rule).attr 'domainPointer'
+        newRules = xpath.resolve selector, $(rule).attr 'domainPointer'
         for newRule in newRules
           domains = ""
           for result in newRule.results
@@ -49,10 +54,7 @@ class DomainRule extends Rule
             if (domain != '')
               domainArr.push domain
 
-          newObject = $.extend(true, {}, object);
-          newObject.selector = newRule.selector
-          newObject.domains = domainArr
-          rules.push newObject
+          rules.push @createRule newRule.selector, domainArr
 
       else
         return
@@ -84,21 +86,9 @@ class DomainRule extends Rule
     # 1. Default
     ret = @def()
     # 2. Rules in the schema
-    xpath = new XPath tag
-    for rule in @rules
-      if rule.type = @NAME
-        if xpath.process rule.selector
-          if rule.domains
-            ret.domains = rule.domains
-          if rule.domainMapping
-            ret.domainMapping = rule.domainMapping
-          @store tag, ret
+    @applyRules ret, tag, ['domains', 'domainMapping']
     # 3. Rules in the document instance (inheritance)
-    if tag instanceof Attr
-      value = @inherited tag.ownerElement
-    else
-      value = @inherited tag
-    if value instanceof Object then ret = value
+    @applyInherit ret, tag, true
     # 4. No Local Attributes
     # ...and return
     ret

@@ -79,21 +79,10 @@ class TerminologyRule extends Rule
     # 1. Default
     ret = @def()
     # 2. Rules in the schema
-    xpath = new XPath tag
-    for rule in @rules
-      if rule.type = @NAME
-        if xpath.process rule.selector
-          if rule.term
-            ret.term = rule.term
-          if rule.termInfoRef
-            ret.termInfoRef = rule.termInfoRef
-          if rule.termInfo
-            ret.termInfo = rule.termInfo
+    @applyRules ret, tag, ['term', 'termInfoRef', 'termInfo']
     # 3. no inheritance
     # 4. Local attributes
-    for objectName, attributeName of @attributes
-      if $(tag).attr attributeName
-        ret[objectName] = $(tag).attr attributeName
+    @applyAttributes ret, tag
     # ...and return
     if ret.term?
       ret.term = @normalizeYesNo ret.term

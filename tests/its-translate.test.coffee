@@ -81,6 +81,8 @@ deleteValuesDependingOnTests = (value) ->
     delete value.idValue
   if document.URL.search(/elementswithintext\/html\//) == -1
     delete value.withinText
+  if document.URL.search(/languageinformation\/html\//) == -1
+    delete value.lang
   delete value.target
   value
 

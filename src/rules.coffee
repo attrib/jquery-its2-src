@@ -30,6 +30,41 @@ class Rule
 
   parse: (rule, content) => throw new Error('AbstractClass Rule: method parse not implemented.')
   apply: (node) => throw new Error('AbstractClass Rule: method apply not implemented.')
+
+  applyRules: (ret, tag, attributes) ->
+    xpath = new XPath tag
+    store = false
+    for rule in @rules
+      if rule.type = @NAME
+        if xpath.process rule.selector
+          for attribute in attributes
+            if rule[attribute]?
+              ret[attribute] = rule[attribute]
+              store = true
+    if store
+      @store tag, ret
+
+  applyAttributes: (ret, tag) ->
+    if @attributes?
+      store = false
+      for objectName, attributeName of @attributes
+        attributeValue = $(tag).attr(attributeName)
+        if attributeValue?
+          ret[objectName] = attributeValue
+          store = true
+      if store
+        @store tag, ret
+
+  applyInherit: (ret, tag, withAttributes = false) ->
+    if tag instanceof Attr
+      if withAttributes
+        value = @inherited tag.ownerElement
+    else
+      value = @inherited tag
+    if value instanceof Object
+      for key, val of value
+        ret[key] = val
+
   def: -> throw new Error('AbstractClass Rule: method def not implemented.')
   standoffMarkupXML: (rule, content, file) =>
     return false
@@ -52,8 +87,10 @@ class Rule
         return $.extend(true, {}, @applied[xpath.path])
 
   store: (node, object) =>
-    xpath = new XPath node
-    @applied[xpath.path] = object
+    # don't waste memory here and save empty objects
+    if (k for own k of object).length isnt 0
+      xpath = new XPath node
+      @applied[xpath.path] = object
 
   normalizeYesNo: (translateString) ->
     if typeof translateString == "boolean"
@@ -64,3 +101,10 @@ class Rule
       return true
     else
       return false
+
+  normalizeString: (string) ->
+    if string?
+      string = string.toLowerCase()
+    else
+      string = ''
+    string

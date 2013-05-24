@@ -41,21 +41,13 @@ class TranslateRule extends Rule
     if ret.translate is false
       return ret
     # 2. Rules in the schema
-    xpath = new XPath tag
-    for rule in @rules
-      if rule.type = @NAME
-        if xpath.process rule.selector
-          ret = { translate: rule.translate }
-          @store tag, ret
+    @applyRules ret, tag, ['translate']
     # 3. Rules in the document instance (inheritance)
-    if tag instanceof Attr
-      value = @inherited tag.ownerElement
-    else
-      value = @inherited tag
-    if value instanceof Object then ret = value
+    @applyInherit ret, tag, true
     # 4. Local attributes
     if (!(tag instanceof Attr) and tag.hasAttribute(@NAME) and $(tag).attr(@NAME) != undefined)
       ret = { translate: @normalizeYesNo $(tag).attr(@NAME) }
+      @store tag, ret
     # ...and return
     ret
 

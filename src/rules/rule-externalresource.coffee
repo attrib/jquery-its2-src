@@ -27,40 +27,30 @@ class ExternalResourceRule extends Rule
     @RULE_NAME = 'its:externalresourcerefrule'
     @NAME = 'externalResource'
 
+  createRule: (selector, externalResourceRef) ->
+    object = {}
+    object.selector = selector
+    object.type = @NAME
+    object.externalResourceRef = externalResourceRef
+    object
+
   parse: (rule, content) ->
     if rule.tagName.toLowerCase() is @RULE_NAME
-      rules = []
-      object = {}
-      object.selector = $(rule).attr 'selector'
-      object.type = @NAME
+      selector = $(rule).attr 'selector'
       # at least one of the following
       if $(rule).attr 'externalResourceRefPointer'
         xpath = new XPath content
-        newRules = xpath.resolve object.selector, $(rule).attr 'externalResourceRefPointer'
+        newRules = xpath.resolve selector, $(rule).attr 'externalResourceRefPointer'
         for newRule in newRules
-          newObject = $.extend(true, {}, object);
-          if newRule.result instanceof Attr then newObject.externalResourceRef = newRule.result.value else newObject.externalResourceRef = $(newRule.result).text()
-          newObject.selector = newRule.selector
-          rules.push newObject
-
-      else
-        return
-
-
-      for ruleObject in rules
-        @addSelector ruleObject
+          if newRule.result instanceof Attr then externalResourceRef = newRule.result.value else externalResourceRef = $(newRule.result).text()
+          @addSelector @createRule(newRule.selector, externalResourceRef)
 
   apply: (tag) =>
     # Precedence order
     # 1. Default
     ret = @def()
     # 2. Rules in the schema
-    xpath = new XPath tag
-    for rule in @rules
-      if rule.type = @NAME
-        if xpath.process rule.selector
-          if rule.externalResourceRef
-            ret.externalResourceRef = rule.externalResourceRef
+    @applyRules ret, tag, ['externalResourceRef']
     # 3. no inheritance
     # 4. no local attributes
     # ...and return

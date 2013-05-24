@@ -27,46 +27,36 @@ class TargetPointerRule extends Rule
     @RULE_NAME = 'its:targetpointerrule'
     @NAME = 'targetPointer'
 
+  createRule: (selector, targetPointer, target) ->
+    object = {}
+    object.selector = selector
+    object.type = @NAME
+    object.targetPointer = targetPointer
+    if target?
+      object.target = target
+    object
+
   parse: (rule, content) ->
     if rule.tagName.toLowerCase() is @RULE_NAME
-      rules = []
-      object = {}
-      object.selector = $(rule).attr 'selector'
-      object.type = @NAME
+      selector = $(rule).attr 'selector'
       # at least one of the following
       if $(rule).attr 'targetPointer'
-        object.targetPointer = $(rule).attr 'targetPointer'
+        targetPointer = $(rule).attr 'targetPointer'
         xpath = new XPath content
-        newRules = xpath.resolve object.selector, object.targetPointer
+        newRules = xpath.resolve selector, targetPointer
         if newRules.length > 0
           for newRule in newRules
-            newObject = $.extend(true, {}, object)
-            if newRule.result instanceof Attr then newObject.target = newRule.result.value else newObject.target = $(newRule.result).text()
-            newObject.selector = newRule.selector
-            rules.push newObject
+            if newRule.result instanceof Attr then target = newRule.result.value else target = $(newRule.result).text()
+            @addSelector @createRule newRule.selector, targetPointer, target
         else
-          rules.push object
-
-      else
-        return
-
-
-      for ruleObject in rules
-        @addSelector ruleObject
+          @addSelector @createRule selector, targetPointer
 
   apply: (tag) =>
     # Precedence order
     # 1. Default
     ret = @def()
     # 2. Rules in the schema
-    xpath = new XPath tag
-    for rule in @rules
-      if rule.type = @NAME
-        if xpath.process rule.selector
-          if rule.target
-            ret.target = rule.target
-          if rule.targetPointer
-            ret.targetPointer = rule.targetPointer
+    @applyRules ret, tag, ['target', 'targetPointer']
     # 3. no inheritance
     # 4. no local attributes
     # ...and return

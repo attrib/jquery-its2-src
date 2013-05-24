@@ -41,13 +41,9 @@ class LocalizationQualityRatingRule extends Rule
     ret = @def()
     # 2. No Rules
     # 3. Rules in the document instance (inheritance)
-    value = @inherited tag
-    if value instanceof Object then ret = value
+    @applyInherit ret, tag
     # 4. Local attributes
-    for objectName, attributeName of @attributes
-      if $(tag).attr(attributeName) != undefined
-        ret[objectName] = $(tag).attr attributeName
-        @store tag, ret
+    @applyAttributes ret, tag
     # Both are not allowed
     if ret.locQualityRatingScore? and ret.locQualityRatingVote?
       delete ret.locQualityRatingVote

@@ -42,7 +42,7 @@ class LocaleFilterRule extends Rule
         return
       #optional
       if $(rule).attr 'localeFilterType'
-        object.localeFilterType = $(rule).attr 'localeFilterType'
+        object.localeFilterType = @normalizeString $(rule).attr 'localeFilterType'
 
       @addSelector object
 
@@ -51,29 +51,14 @@ class LocaleFilterRule extends Rule
     # 1. Default
     ret = @def()
     # 2. Rules in the schema
-    xpath = new XPath tag
-    for rule in @rules
-      if rule.type = @NAME
-        if xpath.process rule.selector
-          if rule.localeFilterList
-            ret.localeFilterList = rule.localeFilterList
-          if rule.localeFilterType
-            ret.localeFilterType = rule.localeFilterType
-          @store tag, ret
+    @applyRules ret, tag, ['localeFilterList', 'localeFilterType']
     # 3. Rules in the document instance (inheritance)
-    if tag instanceof Attr
-      value = @inherited tag.ownerElement
-    else
-      value = @inherited tag
-    if value instanceof Object then ret = value
+    @applyInherit ret, tag, true
     # 4. Local attributes
-    for objectName, attributeName of @attributes
-      if $(tag).attr(attributeName) != undefined
-        ret[objectName] = $(tag).attr attributeName
-        @store tag, ret
+    @applyAttributes ret, tag
     # Conformance
     if ret.localeFilterType?
-      ret.localeFilterType = ret.localeFilterType.toLowerCase();
+      ret.localeFilterType = @normalizeString ret.localeFilterType;
     # ...and return
     ret
 

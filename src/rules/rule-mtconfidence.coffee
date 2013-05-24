@@ -36,7 +36,7 @@ class MTConfidenceRule extends Rule
       object.type = @NAME
       #one of following
       if $(rule).attr 'mtConfidence'
-        object.mtConfidence = $(rule).attr 'mtConfidence'
+        object.mtConfidence = parseFloat $(rule).attr 'mtConfidence'
       else
         return
 
@@ -47,21 +47,11 @@ class MTConfidenceRule extends Rule
     # 1. Default
     ret = @def()
     # 2. Rules in the schema
-    xpath = new XPath tag
-    for rule in @rules
-      if rule.type = @NAME
-        if xpath.process rule.selector
-          if rule.mtConfidence
-            ret.mtConfidence = rule.mtConfidence
-          @store tag, ret
+    @applyRules ret, tag, ['mtConfidence']
     # 3. Rules in the document instance (inheritance)
-    value = @inherited tag
-    if value instanceof Object then ret = value
+    @applyInherit ret, tag
     # 4. Local attributes
-    for objectName, attributeName of @attributes
-      if $(tag).attr(attributeName) != undefined
-        ret[objectName] = $(tag).attr attributeName
-        @store tag, ret
+    @applyAttributes ret, tag
     # Conformance
     if ret.mtConfidence?
       ret.mtConfidence = parseFloat ret.mtConfidence;

@@ -1,6 +1,7 @@
 Version 1.2.0 (development)
 ===========================
 
+* attrib: Refactoring all rules to remove duplicate code
 * attrib: Changed elements withing text data category to use HTML defaults.
 * attrib: Changed translate data category to use HTML defaults.
 * attrib: Added getITSSplitText() function.

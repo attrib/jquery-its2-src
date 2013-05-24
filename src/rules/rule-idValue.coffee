@@ -27,40 +27,30 @@ class IdValueRule extends Rule
     @RULE_NAME = 'its:idvaluerule'
     @NAME = 'idValue'
 
+  createRule: (selector, idValue) ->
+    object = {}
+    object.selector = selector
+    object.type = @NAME
+    object.idValue = idValue
+    object
+
   parse: (rule, content) ->
     if rule.tagName.toLowerCase() is @RULE_NAME
-      rules = []
-      object = {}
-      object.selector = $(rule).attr 'selector'
-      object.type = @NAME
+      selector = $(rule).attr 'selector'
       # at least one of the following
       if $(rule).attr 'idValue'
         xpath = new XPath content
-        newRules = xpath.resolve object.selector, $(rule).attr 'idValue'
+        newRules = xpath.resolve selector, $(rule).attr 'idValue'
         for newRule in newRules
-          newObject = $.extend(true, {}, object);
-          if newRule.result instanceof Attr then newObject.idValue = newRule.result.value else newObject.idValue = $(newRule.result).text()
-          newObject.selector = newRule.selector
-          rules.push newObject
-
-      else
-        return
-
-
-      for ruleObject in rules
-        @addSelector ruleObject
+          if newRule.result instanceof Attr then idValue = newRule.result.value else idValue = $(newRule.result).text()
+          @addSelector @createRule(newRule.selector, idValue)
 
   apply: (tag) =>
     # Precedence order
     # 1. Default
     ret = @def()
     # 2. Rules in the schema
-    xpath = new XPath tag
-    for rule in @rules
-      if rule.type = @NAME
-        if xpath.process rule.selector
-          if rule.idValue
-            ret.idValue = rule.idValue
+    @applyRules ret, tag, ['idValue']
     # 3. no inheritance
     # 4. Local attributes
     if $(tag).attr('xml:id') != undefined

@@ -27,53 +27,41 @@ class LanguageInformationRule extends Rule
     @RULE_NAME = 'its:langrule'
     @NAME = 'languageInformation'
 
+  createRule: (selector, lang) ->
+    object = {}
+    object.selector = selector
+    object.type = @NAME
+    object.lang = lang
+    object
+
   parse: (rule, content) ->
     if rule.tagName.toLowerCase() is @RULE_NAME
-      rules = []
-      object = {}
-      object.selector = $(rule).attr 'selector'
-      object.type = @NAME
+      selector = $(rule).attr 'selector'
       # at least one of the following
       if $(rule).attr 'langPointer'
         xpath = new XPath content
-        newRules = xpath.resolve object.selector, $(rule).attr 'langPointer'
+        newRules = xpath.resolve selector, $(rule).attr 'langPointer'
         for newRule in newRules
-          newObject = $.extend(true, {}, object);
-          if newRule.result instanceof Attr then newObject.lang = newRule.result.value else newObject.lang = $(newRule.result).text()
-          newObject.selector = newRule.selector
-          rules.push newObject
-
-      else
-        return
-
-
-      for ruleObject in rules
-        @addSelector ruleObject
+          if newRule.result instanceof Attr then lang = newRule.result.value else lang = $(newRule.result).text()
+          @addSelector @createRule(newRule.selector, lang)
 
   apply: (tag) =>
     # Precedence order
     # 1. Default
     ret = @def()
     # 2. Rules in the schema
-    xpath = new XPath tag
-    for rule in @rules
-      if rule.type = @NAME
-        if xpath.process rule.selector
-          if rule.lang
-            ret.lang = rule.lang
-          @store tag, ret
+    @applyRules ret, tag, ['lang']
     # 3. Rules in the document instance (inheritance)
-    if tag instanceof Attr
-      value = @inherited tag.ownerElement
-    else
-      value = @inherited tag
-    if value instanceof Object then ret = value
+    @applyInherit ret, tag, true
     # 4. Local attributes
+    store = false
     if $(tag).attr('xml:lang') != undefined
-      ret.idValue = $(tag).attr 'xml:lang'
-      @store tag, ret
+      ret.lang = $(tag).attr 'xml:lang'
+      store = true
     if $(tag).attr('lang') != undefined
-      ret.idValue = $(tag).attr 'lang'
+      ret.lang = $(tag).attr 'lang'
+      store = true
+    if store
       @store tag, ret
     # ...and return
     ret

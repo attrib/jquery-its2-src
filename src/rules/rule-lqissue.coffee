@@ -113,7 +113,7 @@ class LocalizationQualityIssueRule extends Rule
     if object.locQualityIssueEnabled?
       object.locQualityIssueEnabled = @normalizeYesNo object.locQualityIssueEnabled
     if object.locQualityIssueType?
-      object.locQualityIssueType = object.locQualityIssueType.toLowerCase()
+      object.locQualityIssueType = @normalizeString object.locQualityIssueType
 
     return object
 
@@ -122,29 +122,11 @@ class LocalizationQualityIssueRule extends Rule
     # 1. Default
     ret = @def()
     # 2. Rules in the schema
-    xpath = new XPath tag
-    for rule in @rules
-      if rule.type = @NAME
-        if xpath.process rule.selector
-          if rule.locQualityIssueComment
-            ret.locQualityIssueComment = rule.locQualityIssueComment
-          if rule.locQualityIssueEnabled
-            ret.locQualityIssueEnabled = rule.locQualityIssueEnabled
-          if rule.locQualityIssueProfileRef
-            ret.locQualityIssueProfileRef = rule.locQualityIssueProfileRef
-          if rule.locQualityIssueSeverity
-            ret.locQualityIssueSeverity = rule.locQualityIssueSeverity
-          if rule.locQualityIssueType
-            ret.locQualityIssueType = rule.locQualityIssueType
-          @store tag, ret
+    @applyRules ret, tag, ['locQualityIssueComment', 'locQualityIssueEnabled', 'locQualityIssueProfileRef', 'locQualityIssueSeverity', 'locQualityIssueType']
     # 3. Rules in the document instance (inheritance)
-    value = @inherited tag
-    if value instanceof Object then ret = value
+    @applyInherit ret, tag
     # 4. Local attributes
-    for objectName, attributeName of @attributes
-      if $(tag).attr(attributeName) != undefined
-        ret[objectName] = $(tag).attr attributeName
-        @store tag, ret
+    @applyAttributes ret, tag
     # Standoff Markup
     if $(tag).attr('its-loc-quality-issues-ref') != undefined
       ret.locQualityIssuesRef = $(tag).attr('its-loc-quality-issues-ref')
@@ -161,7 +143,7 @@ class LocalizationQualityIssueRule extends Rule
     if ret.locQualityIssueEnabled?
       ret.locQualityIssueEnabled = @normalizeYesNo ret.locQualityIssueEnabled
     if ret.locQualityIssueType?
-      ret.locQualityIssueType = ret.locQualityIssueType.toLowerCase()
+      ret.locQualityIssueType = @normalizeString ret.locQualityIssueType
     # ...and return
     ret
 

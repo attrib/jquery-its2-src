@@ -92,23 +92,10 @@ class TextAnalysisRule extends Rule
     # 1. Default
     ret = @def()
     # 2. Rules in the schema
-    xpath = new XPath tag
-    for rule in @rules
-      if rule.type = @NAME
-        if xpath.process rule.selector
-          if rule.taClassRef
-            ret.taClassRef = rule.taClassRef
-          if rule.taIdent
-            ret.taIdent = rule.taIdent
-          if rule.taIdentRef
-            ret.taIdentRef = rule.taIdentRef
-          if rule.taSource
-            ret.taSource = rule.taSource
+    @applyRules ret, tag, ['taClassRef', 'taIdent', 'taIdentRef', 'taSource']
     # 3. no inheritance
     # 4. Local attributes
-    for objectName, attributeName of @attributes
-      if $(tag).attr attributeName
-        ret[objectName] = $(tag).attr attributeName
+    @applyAttributes ret, tag
     # ...and return
     ret
 

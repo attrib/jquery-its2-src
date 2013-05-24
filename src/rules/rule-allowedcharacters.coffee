@@ -30,24 +30,25 @@ class AllowedCharactersRule extends Rule
       allowedCharacters: 'its-allowed-characters',
     }
 
+  createRule: (selector, allowedCharacters) ->
+    object = {}
+    object.selector = selector
+    object.allowedCharacters = allowedCharacters
+    object.type = @NAME
+    object
+
   parse: (rule, content) ->
     if rule.tagName.toLowerCase() is @RULE_NAME
-      object = {}
-      object.selector = $(rule).attr 'selector'
-      object.type = @NAME
+      selector = $(rule).attr 'selector'
       #one of following
       if $(rule).attr 'allowedCharacters'
-        object.allowedCharacters = $(rule).attr 'allowedCharacters'
-        @addSelector object
+        @addSelector @createRule selector, $(rule).attr('allowedCharacters')
       else if $(rule).attr 'allowedCharactersPointer'
-        allowedCharactersPointer = $(rule).attr 'allowedCharactersPointer'
         xpath = new XPath content
-        newRules = xpath.resolve object.selector, $(rule).attr('allowedCharactersPointer')
+        newRules = xpath.resolve selector, $(rule).attr('allowedCharactersPointer')
         for newRule in newRules
-          newObject = $.extend(true, {}, object);
-          if newRule.result instanceof Attr then newObject.allowedCharacters = newRule.result.value else newObject.allowedCharacters = $(newRule.result).text()
-          newObject.selector = newRule.selector
-          @addSelector newObject
+          if newRule.result instanceof Attr then allowedCharacters = newRule.result.value else allowedCharacters = $(newRule.result).text()
+          @addSelector @createRule newRule.selector, allowedCharacters
       else
         return
 
@@ -56,21 +57,16 @@ class AllowedCharactersRule extends Rule
     # 1. Default
     ret = @def()
     # 2. Rules in the schema
-    xpath = new XPath tag
-    for rule in @rules
-      if rule.type = @NAME
-        if xpath.process rule.selector
-          if rule.allowedCharacters
-            ret.allowedCharacters = rule.allowedCharacters
+    @applyRules ret, tag, ['allowedCharacters']
     # 3. Rules in the document instance
-    # TODO: Not implemented
-    # inheritance
+    @applyInherit ret, tag
     # 4. Local attributes
-    for objectName, attributeName of @attributes
-      if $(tag).attr attributeName
-        ret[objectName] = $(tag).attr attributeName
+    @applyAttributes ret, tag
     # ...and return
-    if ret.allowedCharacters == '' then {} else ret
+    if ret.allowedCharacters == ''
+      return {}
+    else
+      return ret
 
   def: ->
     {

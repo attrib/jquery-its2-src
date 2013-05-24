@@ -32,24 +32,28 @@ class StorageSizeRule extends Rule
       lineBreakType: 'its-line-break-type'
     }
 
+  createRule: (selector, storageSize, storageEncoding = null) ->
+    object = {}
+    object.selector = selector
+    object.type = @NAME
+    object.storageSize = storageSize
+    if storageEncoding?
+      object.storageEncoding = storageEncoding
+    object
+
   parse: (rule, content) ->
     if rule.tagName.toLowerCase() is @RULE_NAME
       rules = []
-      object = {}
-      object.selector = $(rule).attr 'selector'
-      object.type = @NAME
+      selector = $(rule).attr 'selector'
       #one of following
       if $(rule).attr 'storageSize'
-        object.storageSize = $(rule).attr 'storageSize'
-        rules.push $.extend(true, {}, object)
+        rules.push @createRule selector, $(rule).attr 'storageSize'
       else if $(rule).attr 'storageSizePointer'
         xpath = new XPath content
-        newRules = xpath.resolve object.selector, $(rule).attr 'storageSizePointer'
+        newRules = xpath.resolve selector, $(rule).attr 'storageSizePointer'
         for newRule in newRules
-          newObject = $.extend(true, {}, object);
-          if newRule.result instanceof Attr then newObject.storageSize = newRule.result.value else newObject.storageSize = $(newRule.result).text()
-          newObject.selector = newRule.selector
-          rules.push newObject
+          if newRule.result instanceof Attr then storageSize = newRule.result.value else storageSize = $(newRule.result).text()
+          rules.push @createRule newRule.selector, storageSize
       else
         return
       #one or none of following
@@ -58,12 +62,10 @@ class StorageSizeRule extends Rule
           ruleObject.storageEncoding = $(rule).attr 'storageEncoding'
       else if $(rule).attr 'storageEncodingPointer'
         xpath = new XPath content
-        newRules = xpath.resolve object.selector, $(rule).attr 'storageEncodingPointer'
+        newRules = xpath.resolve selector, $(rule).attr 'storageEncodingPointer'
         for newRule in newRules
           if newRule.result instanceof Attr then storageEncoding = newRule.result.value else storageEncoding = $(newRule.result).text()
-          newObject = $.extend(true, {}, object);
-          newObject.storageEncoding = storageEncoding
-          rules.push newObject
+          rules.push @createRule newRule.selector, storageSize, storageEncoding
           for ruleObject in rules
             ruleObject.storageEncoding = storageEncoding
       else
@@ -73,7 +75,7 @@ class StorageSizeRule extends Rule
       #optional
       for ruleObject in rules
         if $(rule).attr 'lineBreakType'
-          ruleObject.lineBreakType = $(rule).attr 'lineBreakType'
+          ruleObject.lineBreakType = @normalizeString $(rule).attr 'lineBreakType'
         else
           ruleObject.lineBreakType = 'lf'
 
@@ -85,25 +87,14 @@ class StorageSizeRule extends Rule
     # 1. Default
     ret = @def()
     # 2. Rules in the schema
-    xpath = new XPath tag
-    for rule in @rules
-      if rule.type = @NAME
-        if xpath.process rule.selector
-          if rule.storageSize
-            ret.storageSize = rule.storageSize
-          if rule.storageEncoding
-            ret.storageEncoding = rule.storageEncoding
-          if rule.lineBreakType
-            ret.lineBreakType = rule.lineBreakType
+    @applyRules ret, tag, ['storageSize', 'storageEncoding', 'lineBreakType']
     # 3. Rules in the document instance
-    # TODO: Not implemented
     # no inheritance
     # 4. Local attributes
-    for objectName, attributeName of @attributes
-      if $(tag).attr attributeName
-        ret[objectName] = $(tag).attr attributeName
+    @applyAttributes ret, tag
     # ...and return
-    ret.lineBreakType = ret.lineBreakType.toLowerCase();
+    if ret.lineBreakType?
+      ret.lineBreakType = @normalizeString ret.lineBreakType
     if ret.storageSize == null then {} else ret
 
   def: ->

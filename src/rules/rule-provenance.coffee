@@ -121,25 +121,11 @@ class ProvenanceRule extends Rule
     # 1. Default
     ret = @def()
     # 2. Rules in the schema
-    xpath = new XPath tag
-    for rule in @rules
-      if rule.type = @NAME
-        if xpath.process rule.selector
-          if rule.provenanceRecordsRef?
-            ret.provenanceRecordsRef = rule.provenanceRecordsRef
-            @store tag, ret
+    @applyRules ret, tag, ['provenanceRecordsRef']
     # 3. Rules in the document instance (inheritance)
-    # standard is saying with attribute, test output is without
-    if tag instanceof Attr
-      value = @inherited tag.ownerElement
-    else
-      value = @inherited tag
-    if value instanceof Object then ret = value
+    @applyInherit ret, tag, true
     # 4. Local attributes
-    for objectName, attributeName of @attributes
-      if $(tag).attr(attributeName) != undefined
-        ret[objectName] = $(tag).attr attributeName
-        @store tag, ret
+    @applyAttributes ret, tag
     # Standoff Markup
     if ret.provenanceRecordsRef?
       for standoff in @standoff
