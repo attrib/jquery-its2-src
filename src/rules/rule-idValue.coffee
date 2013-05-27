@@ -64,3 +64,17 @@ class IdValueRule extends Rule
     {
     }
 
+  jQSelector:
+    name: 'idValue'
+    callback: (a, i, m) ->
+      query = if m[3] then m[3] else 'any'
+      value = window.rulesController.apply a, 'IdValueRule'
+      if (k for own k of value).length isnt 0
+        if query is 'any'
+          return true
+        else if not value.idValue? or value.idValue != query
+          return false
+        else
+          return true
+
+      return false

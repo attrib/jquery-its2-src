@@ -74,3 +74,10 @@ class TranslateRule extends Rule
     else
       return { translate: true }
 
+  jQSelector:
+    name: 'translate'
+    callback: (a, i, m) ->
+      query = if m[3] then m[3] else 'yes'
+      value = window.rulesController.apply a, 'TranslateRule'
+      return value.translate == ( query == 'yes' )
+

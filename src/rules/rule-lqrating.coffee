@@ -64,3 +64,26 @@ class LocalizationQualityRatingRule extends Rule
   def: ->
     {
     }
+
+  jQSelector:
+    name: 'locQualityRating'
+    callback: (a, i, m) ->
+      query = if m[3] then m[3] else 'any'
+      value = window.rulesController.apply a, 'LocalizationQualityRatingRule'
+      if (k for own k of value).length isnt 0
+        if query is 'any'
+          return true
+        else
+          return @splitQuery query, value, {
+            locQualityRatingProfileRef: "" #default behaivor
+            locQualityRatingScore: (match) =>
+              return @compareNumber match[2], value.locQualityRatingScore
+            locQualityRatingScoreThreshold: (match) =>
+              return @compareNumber match[2], value.locQualityRatingScoreThreshold
+            locQualityRatingVote: (match) =>
+              return @compareNumber match[2], value.locQualityRatingVote
+            locQualityRatingVoteThreshold: (match) =>
+              return @compareNumber match[2], value.locQualityRatingVoteThreshold
+          }
+
+      return false

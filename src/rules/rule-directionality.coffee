@@ -54,3 +54,10 @@ class DirectionalityRule extends Rule
 
   def: ->
     { dir: 'ltr' }
+
+  jQSelector:
+    name: 'dir'
+    callback: (a, i, m) ->
+      query = if m[3] then m[3] else 'ltr'
+      value = window.rulesController.apply a, 'DirectionalityRule'
+      return value.dir == query

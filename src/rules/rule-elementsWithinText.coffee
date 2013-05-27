@@ -79,3 +79,21 @@ class ElementsWithinTextRule extends Rule
     return {
       withinText: 'no'
     }
+
+  jQSelector:
+    name: 'withinText'
+    callback: (a, i, m) ->
+      query = if m[3] then m[3] else 'any'
+      value = window.rulesController.apply a, 'ElementsWithinTextRule'
+      if (k for own k of value).length isnt 0
+        if query is 'any'
+          if value.withinText != 'no'
+            return true
+          else
+            return false
+        else if not value.withinText? or value.withinText != query
+          return false
+        else
+          return true
+
+      return false

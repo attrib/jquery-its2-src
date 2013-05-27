@@ -184,8 +184,8 @@ Selector for the [domain](http://www.w3.org/TR/its20/#domain) data category.
 ** For all selectors parseITS has to be run once before. **
 
 ```
-$('*:domain')                         -> select all nodes with any domain
-$('*:domain(domain: automotive)')     -> select all nodes with a specific domain
+$('*:domain')                   -> select all nodes with any domain
+$('*:domain(automotive)')       -> select all nodes with a specific domain
 ```
 
 ### :localeFilter ###
@@ -243,13 +243,14 @@ Selector for the [Localization Quality Rating](http://www.w3.org/TR/its20/#lqrat
 ** For all selectors parseITS has to be run once before. **
 
 ```
-$('*:locQualityRating')                                         -> select all nodes which have a localization quality rating
-$('*:locQualityRating(locQualityIssueSeverity: 50)')            -> select all nodes which have a severity of 50
-$('*:locQualityRating(locQualityIssueSeverity: >50)')           -> select all nodes which have a severity above 50 (also supported are >,!=,<)
-$('*:locQualityRating(locQualityIssueType: misspelling)')       -> select all nodes which have a specific type
-$('*:locQualityRating(locQualityIssuesRef: locqualityissue9htmlstandoff.xml#lq1)')
-                                                               -> select all nodes which have a specific reference to standoff issues
-$('*:locQualityRating(locQualityIssueSeverity: 50, locQualityIssueEnabled: yes)')
+$('*:locQualityRating')                                        -> select all nodes which have a localization quality rating
+$('*:locQualityRating(locQualityRatingScore: 50)')             -> select all nodes which have a rating of 50
+$('*:locQualityRating(locQualityRatingScoreThreshold: >50)')   -> select all nodes which have a rating threshold above 50 (also supported are >,!=,<)
+$('*:locQualityRating(locQualityRatingVote: 50)')              -> select all nodes which have a rating of 50
+$('*:locQualityRating(locQualityRatingVoteThreshold: >50)')    -> select all nodes which have a rating threshold above 50 (also supported are >,!=,<)
+$('*:locQualityRating(locQualityRatingProfileRef: http://example.org/qamodel/v13)')
+                                                               -> select all nodes which have a specific profile reference
+$('*:locQualityRating(locQualityRatingScore: 50, locQualityRatingScoreThreshold: <90)')
                                                                -> matching query can be combined with , (comma)
                                                                   everything has to be true to be returned
 ```
@@ -261,9 +262,9 @@ Selector for the [MT Confidence](http://www.w3.org/TR/its20/#mtconfidence) data 
 ** For all selectors parseITS has to be run once before. **
 
 ```
-$('*:mtConfidence')                               -> select all nodes which have a mt confidence rating
-$('*:mtConfidence(mtConfidence: 0.4)')            -> select all nodes which have a confidence of 0.4
-$('*:mtConfidence(mtConfidence: >0.4)')           -> select all nodes which have a confidence above 0.4 (also supported are >,!=,<)
+$('*:mtConfidence')                 -> select all nodes which have a mt confidence rating
+$('*:mtConfidence(0.4)')            -> select all nodes which have a confidence of 0.4
+$('*:mtConfidence(>0.4)')           -> select all nodes which have a confidence above 0.4 (also supported are >,!=,<)
 ```
 
 ### :provenance ###
@@ -301,8 +302,8 @@ is on element base. ** This returns only elements, no attributes! **
 ** For all selectors parseITS has to be run once before. **
 
 ```
-$('*:externalResource')                                 -> select all nodes which have any external resource
-$('*:externalResource(externalResourceRef: image.png)') -> select all nodes which have a specific external resource
+$('*:externalResource')                  -> select all nodes which have any external resource
+$('*:externalResource(image.png)')       -> select all nodes which have a specific external resource
 ```
 
 ### :targetPointer ###
@@ -312,8 +313,8 @@ Selector for the [Target Pointer](http://www.w3.org/TR/its20/#target-pointer) da
 ** For all selectors parseITS has to be run once before. **
 
 ```
-$('*:targetPointer')                   -> select all nodes which have any target
-$('*:targetPointer(target: file.txt)') -> select all nodes which have a specific target
+$('*:targetPointer')                -> select all nodes which have any target
+$('*:targetPointer(file.txt)')      -> select all nodes which have a specific target
 ```
 
 ### :idValue ###
@@ -326,8 +327,8 @@ This should only be used, if you use for what reasons ever not the id attribute.
 ** For all selectors parseITS has to be run once before. **
 
 ```
-$('*:idValue')                  -> select all nodes which have any id value
-$('*:idValue(idValue: btn.OK)') -> select all nodes which have a specific id
+$('*:idValue')             -> select all nodes which have any id value
+$('*:idValue(btn.OK)')     -> select all nodes which have a specific id
 ```
 
 ### :lang ###
@@ -337,8 +338,8 @@ Selector for the [Language Information](http://www.w3.org/TR/its20/#language-inf
 ** For all selectors parseITS has to be run once before. **
 
 ```
-$('*:lang')              -> select all nodes which have any language
-$('*:lang(lang: fr-CA)') -> select all nodes which have a specific language
+$('*:lang')            -> select all nodes which have any language
+$('*:lang(fr-CA)')     -> select all nodes which have a specific language
 ```
 
 ### :withinText ###
@@ -350,8 +351,8 @@ Also see getITSSplitText for a function to get text, split correctly depending o
 ** For all selectors parseITS has to be run once before. **
 
 ```
-$('*:withinText')                  -> select all nodes with withinText="yes" or "nested"
-$('*:withinText(withinText: yes)') -> select all nodes which have a specific withinText value
+$('*:withinText')          -> select all nodes with withinText="yes" or "nested"
+$('*:withinText(yes)')     -> select all nodes which have a specific withinText value
 ```
 
 ### getITSSplitText() ###

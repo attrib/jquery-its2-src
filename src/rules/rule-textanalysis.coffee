@@ -102,3 +102,24 @@ class TextAnalysisRule extends Rule
   def: ->
     {
     }
+
+  jQSelector:
+    name: 'textAnalysis'
+    callback: (a, i, m) ->
+      query = if m[3] then m[3] else 'any'
+      value = window.rulesController.apply a, 'TextAnalysisRule'
+      if (k for own k of value).length isnt 0
+        if query is 'any'
+          return true
+        else
+          return @splitQuery query, value, {
+            taConfidence: (match) =>
+              return @compareNumber(match[2], value.taConfidence)
+
+            taIdentRef: "" #default behaivor
+            taClassRef: "" #default behaivor
+            taSource: ""   #default behaivor
+            taIdent: ""    #default behaivor
+          }
+
+      return false

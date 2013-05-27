@@ -150,3 +150,59 @@ class LocalizationQualityIssueRule extends Rule
   def: ->
     {
     }
+
+  jQSelector:
+    name: 'locQualityIssue'
+    callback: (a, i, m) ->
+      query = if m[3] then m[3] else 'any'
+      value = window.rulesController.apply a, 'LocalizationQualityIssueRule'
+      if (k for own k of value).length isnt 0
+        if query == 'any'
+          return true
+
+        matchQuery = (value, type, query) =>
+          switch(type)
+            when "locQualityIssueComment"
+              if value.locQualityIssueComment != query
+                return false
+
+            when "locQualityIssueEnabled"
+              return value.locQualityIssueEnabled == ( query == 'yes' )
+
+            when "locQualityIssueProfileRef"
+              if value.locQualityIssueProfileRef != query
+                return false
+
+            when "locQualityIssueType"
+              if value.locQualityIssueType != query
+                return false
+
+            when "locQualityIssuesRef"
+              if value.locQualityIssuesRef != query
+                return false
+
+            when "locQualityIssueSeverity"
+              ret = @compareNumber(query, value.locQualityIssueSeverity)
+              if !ret
+                return false
+
+            else
+              return false
+
+        regExp = /(locQualityIssueComment|locQualityIssueEnabled|locQualityIssueProfileRef|locQualityIssueSeverity|locQualityIssueType|locQualityIssuesRef):[\s]?(["']?)(.+)\2(,|$)/gi
+        while match = regExp.exec(query)
+          ret = matchQuery value, match[1], match[3]
+          if ret?
+            if !ret and value.locQualityIssues?
+              foundOne = false
+              for issue in value.locQualityIssues
+                ret = matchQuery issue, match[1], match[3]
+                if not ret?
+                  foundOne = true
+              return foundOne
+            else
+              return ret
+
+        return true
+
+      return false

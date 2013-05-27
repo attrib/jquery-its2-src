@@ -103,3 +103,28 @@ class StorageSizeRule extends Rule
       storageEncoding: 'UTF-8',
       storageSize: null
     }
+
+  jQSelector:
+    name: 'storageSize'
+    callback: (a, i, m) ->
+      query = if m[3] then m[3] else 'any'
+      value = window.rulesController.apply a, 'StorageSizeRule'
+      if value.storageSize
+        if query == 'any'
+          return true
+        else
+          return @splitQuery query, value, {
+            size: (match) =>
+              return @compareNumber(match[2], value.storageSize)
+            encoding: (match) ->
+              if value.storageEncoding != match[2]
+                return false;
+              else
+                return true
+            linebreak: () ->
+              if value.lineBreakType != match[2]
+                return false;
+              else
+              return true
+          }
+      return false

@@ -70,3 +70,17 @@ class LanguageInformationRule extends Rule
     {
     }
 
+  jQSelector:
+    name: 'lang'
+    callback: (a, i, m) ->
+      query = if m[3] then m[3] else 'any'
+      value = window.rulesController.apply a, 'LanguageInformationRule'
+      if (k for own k of value).length isnt 0
+        if query is 'any'
+          return true
+        else if not value.lang? or value.lang != query
+          return false
+        else
+          return true
+
+      return false

@@ -61,3 +61,16 @@ class MTConfidenceRule extends Rule
   def: ->
     {
     }
+
+  jQSelector:
+    name: 'mtConfidence'
+    callback: (a, i, m) ->
+      query = if m[3] then m[3] else 'any'
+      value = window.rulesController.apply a, 'MTConfidenceRule'
+      if (k for own k of value).length isnt 0
+        if query is 'any'
+          return true
+        else
+          return @compareNumber query, value
+
+      return false

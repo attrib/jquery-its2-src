@@ -60,3 +60,17 @@ class ExternalResourceRule extends Rule
     {
     }
 
+  jQSelector:
+    name: 'externalResource'
+    callback: (a, i, m) ->
+      query = if m[3] then m[3] else 'any'
+      value = window.rulesController.apply a, 'ExternalResourceRule'
+      if (k for own k of value).length isnt 0
+        if query is 'any'
+          return true
+        else if not value.externalResourceRef? or value.externalResourceRef != query
+          return false
+        else
+          return true
+
+      return false

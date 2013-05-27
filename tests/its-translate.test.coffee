@@ -49,6 +49,9 @@ formatOutput = (value) ->
           count++
           issue = []
           for k, v of issueObj
+            # bind is defined for phantomJS and somehow its adds it to this...
+            if k is 'bind'
+              continue
             issue.push "\t#{k}[#{count}]=\"#{formatVal v}\""
           issues += issue.sort().join ''
       else

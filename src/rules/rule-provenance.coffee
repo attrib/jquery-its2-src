@@ -141,3 +141,30 @@ class ProvenanceRule extends Rule
   def: ->
     {
     }
+
+  jQSelector:
+    name: 'provenance'
+    callback: (a, i, m) ->
+      query = if m[3] then m[3] else 'any'
+      value = window.rulesController.apply a, 'ProvenanceRule'
+      if (k for own k of value).length isnt 0
+        if query is 'any'
+          return true
+
+        query = query.split ','
+        for test in query
+          match = test.match /(person|personRef|org|orgRef|tool|toolRef|revPerson|revPersonRef|revOrg|revOrgRef|revTool|revToolRef|provRef|provenanceRecordsRef):\s*(.*?)\s*$/
+          if not value[match[1]]? or value[match[1]] != match[2]
+            if value.provenanceRecords
+              foundOne = false
+              for record in value.provenanceRecords
+                if record[match[1]]? and record[match[1]] == match[2]
+                  foundOne = true
+              if !foundOne
+                return false
+            else
+              return false
+
+        return true
+
+      return false

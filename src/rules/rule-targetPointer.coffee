@@ -66,3 +66,17 @@ class TargetPointerRule extends Rule
     {
     }
 
+  jQSelector:
+    name: 'targetPointer'
+    callback: (a, i, m) ->
+      query = if m[3] then m[3] else 'any'
+      value = window.rulesController.apply a, 'TargetPointerRule'
+      if (k for own k of value).length isnt 0
+        if query is 'any'
+          return true
+        else if not value.target? or value.target != query
+          return false
+        else
+          return true
+
+      return false

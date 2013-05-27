@@ -83,3 +83,15 @@ class LocalizationNoteRule extends Rule
 
   def: ->
     {}
+
+  jQSelector:
+    name: 'locNote'
+    callback: (a, i, m) ->
+      type = if m[3] then m[3] else 'any'
+      value = window.rulesController.apply a, 'LocalizationNoteRule'
+      if value.locNote
+        if type == 'any'
+          return true
+        else if value.locNoteType == type
+          return true
+      return false

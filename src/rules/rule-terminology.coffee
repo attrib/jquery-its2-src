@@ -92,3 +92,26 @@ class TerminologyRule extends Rule
     {
       term: false
     }
+
+  jQSelector:
+    name: 'terminology'
+    callback: (a, i, m) ->
+      query = if m[3] then m[3] else 'any'
+      value = window.rulesController.apply a, 'TerminologyRule'
+      if (k for own k of value).length isnt 0
+        if query is 'any'
+          return value.term
+        else
+          return @splitQuery query, value, {
+            termConfidence: (match) =>
+              return @compareNumber match[2], value.termConfidence
+            term: (match) ->
+              if (value.term and "no" == match[2]) or (!value.term and "yes" == match[2])
+                return false
+              else
+                return true
+            termInfoRef: "" #default behaivor
+          }
+
+      return false
+
