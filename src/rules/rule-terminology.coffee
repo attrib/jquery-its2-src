@@ -45,7 +45,7 @@ class TerminologyRule extends Rule
 
       # none or exaclty one of the following
       if $(rule).attr('termInfoPointer')
-        xpath = new XPath content
+        xpath = XPath.getInstance content
         newRules = xpath.resolve object.selector, $(rule).attr 'termInfoPointer'
         for newRule in newRules
           newObject = $.extend(true, {}, object);
@@ -58,7 +58,7 @@ class TerminologyRule extends Rule
         rules.push $.extend(true, {}, object)
 
       else if $(rule).attr 'termInfoRefPointer'
-        xpath = new XPath content
+        xpath = XPath.getInstance content
         newRules = xpath.resolve object.selector, $(rule).attr 'termInfoRefPointer'
         for newRule in newRules
           newObject = $.extend(true, {}, object);

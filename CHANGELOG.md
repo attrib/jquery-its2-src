@@ -1,6 +1,8 @@
 Version 1.2.0 (development)
 ===========================
 
+* attrib: Added not language operator for language information rule.
+* attrib: Minor changes and minor performance updates.
 * attrib: Moved jQuery selectors into Rules objects to have a better separation
 * attrib: Refactoring all rules to remove duplicate code
 * attrib: Changed elements withing text data category to use HTML defaults.

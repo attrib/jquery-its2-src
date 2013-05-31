@@ -39,7 +39,7 @@ class ExternalResourceRule extends Rule
       selector = $(rule).attr 'selector'
       # at least one of the following
       if $(rule).attr 'externalResourceRefPointer'
-        xpath = new XPath content
+        xpath = XPath.getInstance content
         newRules = xpath.resolve selector, $(rule).attr 'externalResourceRefPointer'
         for newRule in newRules
           if newRule.result instanceof Attr then externalResourceRef = newRule.result.value else externalResourceRef = $(newRule.result).text()

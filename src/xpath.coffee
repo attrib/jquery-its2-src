@@ -34,6 +34,18 @@ class XPath
 
     @build()
 
+  @instances_el: []
+  @instances: []
+  @getInstance: (element) =>
+    index = @instances_el.indexOf(element)
+    if index != -1
+      instance = @instances[index]
+    else
+      instance = new XPath(element)
+      @instances.push instance
+      @instances_el.push element
+    instance
+
   build: =>
     @path = @path.concat @parents()
     @path = @path.concat @index(@element.get(0))
@@ -101,7 +113,7 @@ class XPath
     result = @query selector, XPathResult.ORDERED_NODE_ITERATOR_TYPE
     unrolled = []
     while matchedElement = result.iterateNext()
-      xpath = new XPath matchedElement
+      xpath = XPath.getInstance matchedElement
       ret = xpath.query pointer, XPathResult.ORDERED_NODE_ITERATOR_TYPE
       values = []
       while value = ret.iterateNext()

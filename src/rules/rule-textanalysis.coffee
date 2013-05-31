@@ -44,7 +44,7 @@ class TextAnalysisRule extends Rule
       foundOne = false
       if $(rule).attr 'taClassRefPointer'
         foundOne = true
-        xpath = new XPath content
+        xpath = XPath.getInstance content
         newRules = xpath.resolve object.selector, $(rule).attr 'taClassRefPointer'
         for newRule in newRules
           newObject = $.extend(true, {}, object);
@@ -55,7 +55,7 @@ class TextAnalysisRule extends Rule
       # exaclty one of the following
       if $(rule).attr 'taIdentRefPointer'
         foundOne = true
-        xpath = new XPath content
+        xpath = XPath.getInstance content
         newRules = xpath.resolve object.selector, $(rule).attr 'taIdentRefPointer'
         for newRule in newRules
           newObject = $.extend(true, {}, object);
@@ -65,7 +65,7 @@ class TextAnalysisRule extends Rule
 
       else if $(rule).attr('taSourcePointer') and $(rule).attr('taIdentPointer')
         foundOne = true
-        xpath = new XPath content
+        xpath = XPath.getInstance content
         newRules = xpath.resolve object.selector, $(rule).attr 'taSourcePointer'
         for newRule in newRules
           newObject = $.extend(true, {}, object);

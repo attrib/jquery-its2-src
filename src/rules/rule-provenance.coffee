@@ -101,7 +101,7 @@ class ProvenanceRule extends Rule
       object.selector = $(rule).attr 'selector'
       object.type = @NAME
       if $(rule).attr('provenanceRecordsRefPointer') != undefined
-        xpath = new XPath content
+        xpath = XPath.getInstance content
         object.provenanceRecordsRefPointer = $(rule).attr('provenanceRecordsRefPointer')
         newRules = xpath.resolve object.selector, object.provenanceRecordsRefPointer
         for newRule in newRules

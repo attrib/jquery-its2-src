@@ -42,7 +42,7 @@ class TargetPointerRule extends Rule
       # at least one of the following
       if $(rule).attr 'targetPointer'
         targetPointer = $(rule).attr 'targetPointer'
-        xpath = new XPath content
+        xpath = XPath.getInstance content
         newRules = xpath.resolve selector, targetPointer
         if newRules.length > 0
           for newRule in newRules

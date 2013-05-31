@@ -39,7 +39,7 @@ class DomainRule extends Rule
       rules = []
 
       if $(rule).attr 'domainPointer'
-        xpath = new XPath content
+        xpath = XPath.getInstance content
         newRules = xpath.resolve selector, $(rule).attr 'domainPointer'
         for newRule in newRules
           domains = ""

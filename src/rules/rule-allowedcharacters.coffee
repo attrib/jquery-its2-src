@@ -44,7 +44,7 @@ class AllowedCharactersRule extends Rule
       if $(rule).attr 'allowedCharacters'
         @addSelector @createRule selector, $(rule).attr('allowedCharacters')
       else if $(rule).attr 'allowedCharactersPointer'
-        xpath = new XPath content
+        xpath = XPath.getInstance content
         newRules = xpath.resolve selector, $(rule).attr('allowedCharactersPointer')
         for newRule in newRules
           if newRule.result instanceof Attr then allowedCharacters = newRule.result.value else allowedCharacters = $(newRule.result).text()

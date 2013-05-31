@@ -32,7 +32,7 @@ class Rule
   apply: (node) => throw new Error('AbstractClass Rule: method apply not implemented.')
 
   applyRules: (ret, tag, attributes) ->
-    xpath = new XPath tag
+    xpath = XPath.getInstance tag
     store = false
     for rule in @rules
       if rule.type = @NAME
@@ -82,14 +82,14 @@ class Rule
     parents = $(node).parents()
     parents.splice(0, 0, $(node))
     for parent in parents
-      xpath = new XPath parent
+      xpath = XPath.getInstance parent
       if @applied[xpath.path]
         return $.extend(true, {}, @applied[xpath.path])
 
   store: (node, object) =>
     # don't waste memory here and save empty objects
     if (k for own k of object).length isnt 0
-      xpath = new XPath node
+      xpath = XPath.getInstance node
       @applied[xpath.path] = object
 
   normalizeYesNo: (translateString) ->

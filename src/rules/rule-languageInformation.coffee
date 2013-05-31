@@ -39,7 +39,7 @@ class LanguageInformationRule extends Rule
       selector = $(rule).attr 'selector'
       # at least one of the following
       if $(rule).attr 'langPointer'
-        xpath = new XPath content
+        xpath = XPath.getInstance content
         newRules = xpath.resolve selector, $(rule).attr 'langPointer'
         for newRule in newRules
           if newRule.result instanceof Attr then lang = newRule.result.value else lang = $(newRule.result).text()
@@ -55,10 +55,10 @@ class LanguageInformationRule extends Rule
     @applyInherit ret, tag, true
     # 4. Local attributes
     store = false
-    if $(tag).attr('xml:lang') != undefined
+    if (!(tag instanceof Attr) and tag.hasAttribute('xml:lang') and $(tag).attr('xml:lang') != undefined)
       ret.lang = $(tag).attr 'xml:lang'
       store = true
-    if $(tag).attr('lang') != undefined
+    if (!(tag instanceof Attr) and tag.hasAttribute('lang') and $(tag).attr('lang') != undefined)
       ret.lang = $(tag).attr 'lang'
       store = true
     if store
@@ -76,9 +76,15 @@ class LanguageInformationRule extends Rule
       query = if m[3] then m[3] else 'any'
       value = window.rulesController.apply a, 'LanguageInformationRule'
       if (k for own k of value).length isnt 0
+        invert = false
+        if query.charAt(0) is '!'
+          invert = true
+          query = query.substr(1)
         if query is 'any'
           return true
-        else if not value.lang? or value.lang != query
+        else if not invert and (not value.lang? or value.lang != query)
+          return false
+        else if invert and (not value.lang? or value.lang == query)
           return false
         else
           return true

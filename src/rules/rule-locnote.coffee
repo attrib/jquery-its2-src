@@ -49,7 +49,7 @@ class LocalizationNoteRule extends Rule
       #  'its:locnote' element.
       #  'locNotePointer' | 'locNoteRef' | 'locNoteRefPointer' attribute.
       if $(rule).attr('locNotePointer')
-        xpath = new XPath content
+        xpath = XPath.getInstance content
         newRules = xpath.resolve $(rule).attr('selector'), $(rule).attr('locNotePointer')
         for newRule in newRules
           if newRule.result instanceof Attr then locNote = newRule.result.value else locNote = $(newRule.result).text()
@@ -57,7 +57,7 @@ class LocalizationNoteRule extends Rule
       else if $(rule).attr('locNoteRef')
         @addSelector @createRule $(rule).attr('selector'), $(rule).attr('locNoteType'), $(rule).attr('locNoteRef'), true
       else if $(rule).attr('locNoteRefPointer')
-        xpath = new XPath content
+        xpath = XPath.getInstance content
         newRules = xpath.resolve $(rule).attr('selector'), $(rule).attr('locNoteRefPointer')
         for newRule in newRules
           if newRule.result instanceof Attr then locNote = newRule.result.value else locNote = $(newRule.result).text()

@@ -39,7 +39,7 @@ class IdValueRule extends Rule
       selector = $(rule).attr 'selector'
       # at least one of the following
       if $(rule).attr 'idValue'
-        xpath = new XPath content
+        xpath = XPath.getInstance content
         newRules = xpath.resolve selector, $(rule).attr 'idValue'
         for newRule in newRules
           if newRule.result instanceof Attr then idValue = newRule.result.value else idValue = $(newRule.result).text()

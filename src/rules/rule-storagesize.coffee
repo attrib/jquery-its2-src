@@ -49,7 +49,7 @@ class StorageSizeRule extends Rule
       if $(rule).attr 'storageSize'
         rules.push @createRule selector, $(rule).attr 'storageSize'
       else if $(rule).attr 'storageSizePointer'
-        xpath = new XPath content
+        xpath = XPath.getInstance content
         newRules = xpath.resolve selector, $(rule).attr 'storageSizePointer'
         for newRule in newRules
           if newRule.result instanceof Attr then storageSize = newRule.result.value else storageSize = $(newRule.result).text()
@@ -61,7 +61,7 @@ class StorageSizeRule extends Rule
         for ruleObject in rules
           ruleObject.storageEncoding = $(rule).attr 'storageEncoding'
       else if $(rule).attr 'storageEncodingPointer'
-        xpath = new XPath content
+        xpath = XPath.getInstance content
         newRules = xpath.resolve selector, $(rule).attr 'storageEncodingPointer'
         for newRule in newRules
           if newRule.result instanceof Attr then storageEncoding = newRule.result.value else storageEncoding = $(newRule.result).text()

@@ -27,100 +27,103 @@ Function.prototype.bind = Function.prototype.bind || (thisp) ->
     return fn.apply(thisp, arguments)
 
 
-(($) ->
-  globalRules = [new ParamRule(), new TranslateRule(), new LocalizationNoteRule(), new StorageSizeRule(),
-    new AllowedCharactersRule(), new AnnotatorsRef(), new TextAnalysisRule(), new TerminologyRule(), new DirectionalityRule(),
-    new DomainRule(), new LocaleFilterRule(), new LocalizationQualityIssueRule(), new LocalizationQualityRatingRule(),
-    new MTConfidenceRule(), new ProvenanceRule(), new ExternalResourceRule(), new TargetPointerRule(), new IdValueRule(),
-    new LanguageInformationRule(), new ElementsWithinTextRule()]
+globalRules = [new ParamRule(), new TranslateRule(), new LocalizationNoteRule(), new StorageSizeRule(),
+  new AllowedCharactersRule(), new AnnotatorsRef(), new TextAnalysisRule(), new TerminologyRule(), new DirectionalityRule(),
+  new DomainRule(), new LocaleFilterRule(), new LocalizationQualityIssueRule(), new LocalizationQualityRatingRule(),
+  new MTConfidenceRule(), new ProvenanceRule(), new ExternalResourceRule(), new TargetPointerRule(), new IdValueRule(),
+  new LanguageInformationRule(), new ElementsWithinTextRule()]
 
-  selectors = {}
-  for rule in globalRules
-    if rule.jQSelector? and typeof rule.jQSelector.callback is 'function'
-      selectors[rule.jQSelector.name] = rule.jQSelector.callback.bind(rule)
-  $.extend $.expr[':'], selectors
+selectors = {}
+for rule in globalRules
+  if rule.jQSelector? and typeof rule.jQSelector.callback is 'function'
+    selectors[rule.jQSelector.name] = rule.jQSelector.callback.bind(rule)
+$.extend $.expr[':'], selectors
 
-  $.extend
-    parseITS: (callback) ->
-      window.XPath = XPath
-      window.rulesController = new RulesController(globalRules)
-      window.rulesController.setContent $('html')
-      window.rulesController.getStandoffMarkup()
-      external_rules = $('link[rel="its-rules"]')
-      if external_rules
-        window.rulesController.addLink rule for rule in external_rules
-      internal_rules = $('script[type="application/its+xml"]')
-      if internal_rules
-        for rule in internal_rules
-          rule = $.parseXML rule.childNodes[0].data
-          if rule
-            window.rulesController.addXML rule.childNodes[0]
-      if callback
-        callback(window.rulesController)
+$.extend
+  parseITS: (callback) ->
+    window.XPath = XPath
+    window.rulesController = new RulesController(globalRules)
+    window.rulesController.setContent $('html')
+    window.rulesController.getStandoffMarkup()
+    external_rules = $('link[rel="its-rules"]')
+    if external_rules
+      window.rulesController.addLink rule for rule in external_rules
+    internal_rules = $('script[type="application/its+xml"]')
+    if internal_rules
+      for rule in internal_rules
+        rule = $.parseXML rule.childNodes[0].data
+        if rule
+          window.rulesController.addXML rule.childNodes[0]
+    if callback
+      callback(window.rulesController)
 
-    getITSData: (element) ->
-      $(element).getITSData();
+  getITSData: (element) ->
+    $(element).getITSData();
 
-  $.fn.extend
-    getITSData: () ->
-      values = []
-      for element in this
-        ruleValues = window.rulesController.apply element
-        if ruleValues
-          delete ruleValues.ParamRule
-          value = {}
-          for ruleName, rule of ruleValues
-            value = $.extend value, rule
-          values.push value
-      if values.length == 1
-        values.pop()
-      else
-        values
+  clearITSCache: () ->
+    XPath.instances = []
+    XPath.instances_el = []
+    for rule in globalRules
+      rule.applied = {}
 
-    getITSAnnotatorsRef: (searchRuleName) ->
-      annotator = []
-      for element in this
-        ruleValues = window.rulesController.apply element, 'AnnotatorsRef'
-        if ruleValues.annotatorsRefSplitted
-          for ruleName, ruleAnnotator of ruleValues.annotatorsRefSplitted
-            if searchRuleName.toLowerCase() == ruleName.toLowerCase()
-              annotator.push ruleAnnotator
-      annotator
+$.fn.extend
+  getITSData: () ->
+    values = []
+    for element in this
+      ruleValues = window.rulesController.apply element
+      if ruleValues
+        delete ruleValues.ParamRule
+        value = {}
+        for ruleName, rule of ruleValues
+          value = $.extend value, rule
+        values.push value
+    if values.length == 1
+      values.pop()
+    else
+      values
 
-    getITSSplitText: () ->
-      texts = []
-      prepareText = (text) ->
-        text.replace /^\s*|\s*$/g, ''
+  getITSAnnotatorsRef: (searchRuleName) ->
+    annotator = []
+    for element in this
+      ruleValues = window.rulesController.apply element, 'AnnotatorsRef'
+      if ruleValues.annotatorsRefSplitted
+        for ruleName, ruleAnnotator of ruleValues.annotatorsRefSplitted
+          if searchRuleName.toLowerCase() == ruleName.toLowerCase()
+            annotator.push ruleAnnotator
+    annotator
 
-      splitText = (element, nested = false) ->
-        value = window.rulesController.apply element, 'ElementsWithinTextRule'
-        if value.withinText == 'no'
-          if element.childNodes.length > 0
-            text = ""
-            for child in element.childNodes
-              if child.nodeType is 1
-                if splitText child, true
-                  text += " " + prepareText $('<div></div>').append($(child).clone()).html()
-              else
-                text += " " + prepareText child.nodeValue
+  getITSSplitText: () ->
+    texts = []
+    prepareText = (text) ->
+      text.replace /^\s*|\s*$/g, ''
 
-            if text != ""
-              texts.push prepareText text
-          else
-            texts.push prepareText $(element).html()
-        else if value.withinText == 'nested'
+    splitText = (element, nested = false) ->
+      value = window.rulesController.apply element, 'ElementsWithinTextRule'
+      if value.withinText == 'no'
+        if element.childNodes.length > 0
+          text = ""
+          for child in element.childNodes
+            if child.nodeType is 1
+              if splitText child, true
+                text += " " + prepareText $('<div></div>').append($(child).clone()).html()
+            else
+              text += " " + prepareText child.nodeValue
+
+          if text != ""
+            texts.push prepareText text
+        else
           texts.push prepareText $(element).html()
-        else if value.withinText == 'yes'
-          if not nested
-            splitText element.parentNode
-          else
-            return true
+      else if value.withinText == 'nested'
+        texts.push prepareText $(element).html()
+      else if value.withinText == 'yes'
+        if not nested
+          splitText element.parentNode
+        else
+          return true
 
-        return false
+      return false
 
-      for element in this
-        splitText element
+    for element in this
+      splitText element
 
-      texts
-
-)(jQuery);
+    texts

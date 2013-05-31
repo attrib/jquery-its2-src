@@ -78,6 +78,24 @@ $('span').getITSAnnotatorsRef('textAnalysis')    -> get the annotators Reference
   returns ["http://enrycher.ijs.si"]
 ```
 
+### $.clearITSCache() ###
+
+Clear internal saved Inheritance and XPaths Objects.
+This is needed to be done, after the underlying HTML structure has changed.
+
+If you are 100% sure there were only changes done at the end of the document
+(or only none structural changes, like added classes), you don't need to clear the cache.
+Just use this, if you have trouble with wrong ITS data.
+
+```
+// Add a span somewhere
+$('p:first').before('<span></span>');
+// Now internal caches are wrong for Inheritance and the ITS Cache has to be cleared.
+$.clearITSCache();
+// Now you can retrieve the correct ITS values
+$('p').getITSData();
+```
+
 ### :translate ###
 
 Selector for the [translate](http://www.w3.org/TR/its20/#trans-datacat) data category.
@@ -339,7 +357,8 @@ Selector for the [Language Information](http://www.w3.org/TR/its20/#language-inf
 
 ```
 $('*:lang')            -> select all nodes which have any language
-$('*:lang(fr-CA)')     -> select all nodes which have a specific language
+$('*:lang(fr)')        -> select all nodes which have a specific language
+$('*:lang(!fr)')       -> select all nodes which are not in the given language
 ```
 
 ### :withinText ###
