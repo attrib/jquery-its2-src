@@ -190,9 +190,10 @@ Selector for the [directionality](http://www.w3.org/TR/its20/#directionality) da
 ** For all selectors parseITS has to be run once before. **
 
 ```
-$('*:translate')                -> select all nodes with dir = ltr
-$('*:translate(ltr)')           -> select all nodes with dir = ltr
-$('*:translate(rtl)')            -> select all nodes with dir = rtl
+$('*:dir')                -> select all nodes with dir = ltr
+$('*:dir(ltr)')           -> select all nodes with dir = ltr
+$('*:dir(rtl)')           -> select all nodes with dir = rtl
+$('*:dir(!rtl)')          -> select all nodes with dir != rtl
 ```
 
 ### :domain ###

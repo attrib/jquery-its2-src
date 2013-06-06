@@ -60,4 +60,7 @@ class DirectionalityRule extends Rule
     callback: (a, i, m) ->
       query = if m[3] then m[3] else 'ltr'
       value = window.rulesController.apply a, 'DirectionalityRule'
+      if query.charAt(0) is '!'
+        query = query.substr(1)
+        return value.dir != query
       return value.dir == query

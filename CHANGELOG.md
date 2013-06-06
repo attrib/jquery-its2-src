@@ -1,6 +1,7 @@
 Version 1.2.0 (development)
 ===========================
 
+* attrib: Added not dir operator for directionality rule.
 * attrib: Added not language operator for language information rule.
 * attrib: Minor changes and minor performance updates.
 * attrib: Moved jQuery selectors into Rules objects to have a better separation
