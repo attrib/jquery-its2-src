@@ -12,7 +12,7 @@ tests/%.js: tests/%.coffee
 	coffee -cbp $< > $@
 
 src: $(BUILD)
-	cat $(BUILD) | uglifyjs -bo build/jquery.its-parser.js
+	uglifyjs $(BUILD) -bo build/jquery.its-parser.js
 	(echo '(function($$) {' && cat build/jquery.its-parser.js && echo '})(jQuery);') > tmp
 	mv tmp build/jquery.its-parser.js
 
@@ -29,8 +29,8 @@ clean:
 
 release: clean src
 	rm -f release/jquery.its-parser.js release/jquery.its-parser.min.js
-	cat $(BUILD) | uglifyjs -bo release/jquery.its-parser.js
-	cat $(BUILD) | uglifyjs -o release/jquery.its-parser.min.js
+	uglifyjs $(BUILD) -bo release/jquery.its-parser.js
+	uglifyjs $(BUILD) -o release/jquery.its-parser.min.js
 	sh next_version.sh
 	(cat header.txt && echo '(function($$) {' && cat release/jquery.its-parser.js && echo '})(jQuery);') > tmp
 	mv tmp release/jquery.its-parser.js
