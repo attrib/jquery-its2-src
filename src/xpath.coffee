@@ -36,12 +36,16 @@ class XPath
 
   @instances_el: []
   @instances: []
-  @getInstance: (element) =>
+  @getInstance: (elementjQ) =>
+    if elementjQ.jquery?
+      element = elementjQ.get(0)
+    else
+      element = elementjQ
     index = @instances_el.indexOf(element)
     if index != -1
       instance = @instances[index]
     else
-      instance = new XPath(element)
+      instance = new XPath(elementjQ)
       @instances.push instance
       @instances_el.push element
     instance
