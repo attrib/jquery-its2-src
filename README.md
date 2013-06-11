@@ -102,7 +102,7 @@ $('p').getITSData();
 
 Selector for the [translate](http://www.w3.org/TR/its20/#trans-datacat) data category.
 
-** For all selectors parseITS has to be run once before. **
+**For all selectors parseITS has to be run once before.**
 
 ```
 $('*:translate')                -> select all nodes with translate = yes
@@ -114,7 +114,7 @@ $('*:translate(no)')            -> select all nodes with translate = no
 
 Selector for the [localization note](http://www.w3.org/TR/its20/#locNote-datacat) data category.
 
-** For all selectors parseITS has to be run once before. **
+**For all selectors parseITS has to be run once before.**
 
 ```
 $('*:locNote')                  -> select all nodes with a any localization note
@@ -127,7 +127,7 @@ $('*:locNote(alert)')           -> select all nodes with a localization note fro
 
 Selector for the [storage size](http://www.w3.org/TR/its20/#storagesize) data category.
 
-** For all selectors parseITS has to be run once before. **
+**For all selectors parseITS has to be run once before.**
 
 ```
 $('*:storageSize')                  -> select all nodes with a any storage size
@@ -143,7 +143,7 @@ $('*:storageSize(size: 25, linebreak: lf)') -> matching query can be combined wi
 
 Selector for the [allowed characters](http://www.w3.org/TR/its20/#allowedchars) data category.
 
-** For all selectors parseITS has to be run once before. **
+**For all selectors parseITS has to be run once before.**
 
 ```
 $('*:allowedCharacters')        -> select all nodes with a any allowed characters
@@ -154,7 +154,7 @@ $('*:allowedCharacters([a-Z])') -> select all nodes with the specified allowed c
 
 Selector for the [text analysis](http://www.w3.org/TR/its20/#textanalysis) data category.
 
-** For all selectors parseITS has to be run once before. **
+**For all selectors parseITS has to be run once before.**
 
 ```
 $('*:textAnalysis')                        -> select all nodes with a any text analysis attribute
@@ -172,7 +172,7 @@ $('*:textAnalysis(taConfidence: >0.5, taSource: Wordnet3.0)')               -> m
 
 Selector for the [terminology](http://www.w3.org/TR/its20/#terminology) data category.
 
-** For all selectors parseITS has to be run once before. **
+**For all selectors parseITS has to be run once before.**
 
 ```
 $('*:terminology')                        -> select all nodes which are a term
@@ -189,7 +189,7 @@ $('*:terminology(termConfidence: >0.5, term: yes)')  -> matching query can be co
 
 Selector for the [directionality](http://www.w3.org/TR/its20/#directionality) data category.
 
-** For all selectors parseITS has to be run once before. **
+**For all selectors parseITS has to be run once before.**
 
 ```
 $('*:dir')                -> select all nodes with dir = ltr
@@ -202,7 +202,7 @@ $('*:dir(!rtl)')          -> select all nodes with dir != rtl
 
 Selector for the [domain](http://www.w3.org/TR/its20/#domain) data category.
 
-** For all selectors parseITS has to be run once before. **
+**For all selectors parseITS has to be run once before.**
 
 ```
 $('*:domain')                   -> select all nodes with any domain
@@ -213,7 +213,7 @@ $('*:domain(automotive)')       -> select all nodes with a specific domain
 
 Selector for the [locale filter](http://www.w3.org/TR/its20/#LocaleFilter) data category.
 
-** For all selectors parseITS has to be run once before. **
+**For all selectors parseITS has to be run once before.**
 
 ```
 $('*:localeFilter')                                   -> select all nodes which have a locale filter (not "include" - "*")
@@ -239,7 +239,7 @@ All queries also handles standoff markup. If a node has a reference to a standof
 with multiple issues and the query is locQualityIssueSeverity: >50
 then the node will be returned, if at least one issue satisfy this query.
 
-** For all selectors parseITS has to be run once before. **
+**For all selectors parseITS has to be run once before.**
 
 ```
 $('*:locQualityIssue')                                         -> select all nodes which have a localization quality issue
@@ -261,7 +261,7 @@ $('*:locQualityIssue(locQualityIssueSeverity: 50, locQualityIssueEnabled: yes)')
 
 Selector for the [Localization Quality Rating](http://www.w3.org/TR/its20/#lqrating) data category.
 
-** For all selectors parseITS has to be run once before. **
+**For all selectors parseITS has to be run once before.**
 
 ```
 $('*:locQualityRating')                                        -> select all nodes which have a localization quality rating
@@ -280,7 +280,7 @@ $('*:locQualityRating(locQualityRatingScore: 50, locQualityRatingScoreThreshold:
 
 Selector for the [MT Confidence](http://www.w3.org/TR/its20/#mtconfidence) data category.
 
-** For all selectors parseITS has to be run once before. **
+**For all selectors parseITS has to be run once before.**
 
 ```
 $('*:mtConfidence')                 -> select all nodes which have a mt confidence rating
@@ -296,7 +296,7 @@ All queries also handles standoff markup. If a node has a reference to a standof
 with multiple records and the query is person: John Doe
 then the node will be returned, if at least one record satisfy this query.
 
-** For all selectors parseITS has to be run once before. **
+**For all selectors parseITS has to be run once before.**
 
 ```
 $('*:provenance')                                 -> select all nodes which have any provenance record
@@ -318,9 +318,9 @@ $('*:provenance(person: Jon Doe, org: acme-CAT-v2.3)')
 Selector for the [External Resource](http://www.w3.org/TR/its20/#externalresource) data category.
 
 This selector is problematic currently, because often this is only on attribute base, but jQuery selector
-is on element base. ** This returns only elements, no attributes! **
+is on element base. **This returns only elements, no attributes!**
 
-** For all selectors parseITS has to be run once before. **
+**For all selectors parseITS has to be run once before.**
 
 ```
 $('*:externalResource')                  -> select all nodes which have any external resource
@@ -331,7 +331,7 @@ $('*:externalResource(image.png)')       -> select all nodes which have a specif
 
 Selector for the [Target Pointer](http://www.w3.org/TR/its20/#target-pointer) data category.
 
-** For all selectors parseITS has to be run once before. **
+**For all selectors parseITS has to be run once before.**
 
 ```
 $('*:targetPointer')                -> select all nodes which have any target
@@ -343,9 +343,9 @@ $('*:targetPointer(file.txt)')      -> select all nodes which have a specific ta
 Selector for the [ID Value](http://www.w3.org/TR/its20/#idvalue) data category.
 
 This should only be used, if you use for what reasons ever not the id attribute.
-** But it is strongly recommended to use the id attribute. **
+**But it is strongly recommended to use the id attribute.**
 
-** For all selectors parseITS has to be run once before. **
+**For all selectors parseITS has to be run once before.**
 
 ```
 $('*:idValue')             -> select all nodes which have any id value
@@ -356,7 +356,7 @@ $('*:idValue(btn.OK)')     -> select all nodes which have a specific id
 
 Selector for the [Language Information](http://www.w3.org/TR/its20/#language-information) data category.
 
-** For all selectors parseITS has to be run once before. **
+**For all selectors parseITS has to be run once before.**
 
 ```
 $('*:lang')            -> select all nodes which have any language
@@ -370,7 +370,7 @@ Selector for the [Elements Within Text](http://www.w3.org/TR/its20/#elements-wit
 
 Also see getITSSplitText for a function to get text, split correctly depending on withinText values.
 
-** For all selectors parseITS has to be run once before. **
+**For all selectors parseITS has to be run once before.**
 
 ```
 $('*:withinText')          -> select all nodes with withinText="yes" or "nested"
