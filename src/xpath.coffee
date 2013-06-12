@@ -32,8 +32,6 @@ class XPath
     else
       @element = element
 
-    @build()
-
   @instances_el: []
   @instances: []
   @getInstance: (elementjQ) =>
@@ -51,8 +49,9 @@ class XPath
     instance
 
   build: =>
-    @path = @path.concat @parents()
-    @path = @path.concat @index(@element)
+    if @path == ''
+      @path = @path.concat @parents()
+      @path = @path.concat @index(@element)
 
   parents: =>
     parentPath = ""
@@ -83,7 +82,7 @@ class XPath
     string
 
 
-  filter: (selector) ->
+  @filter: (selector) ->
     # TODO: Try to use the correct namespace in @query
     selector.replace /h:/g, ''
 
@@ -91,11 +90,10 @@ class XPath
     domElement = @element
     document.evaluate selector, domElement, null, resultType, null
 
-  process: (selector) ->
-    return false if not @element?
+  @process: (selector, domElement) ->
+    return false if not domElement?
     selector = @filter selector
     xpe = new XPathEvaluator()
-    domElement = @element
     # domElement has to be a domElement and no attribute
     attribute = false
     if (domElement instanceof Attr)
@@ -113,8 +111,8 @@ class XPath
     return false
 
   resolve: (selector, pointer) ->
-    selector = @filter selector
-    pointer = @filter pointer
+    selector = XPath.filter selector
+    pointer = XPath.filter pointer
     result = @query selector, XPathResult.ORDERED_NODE_ITERATOR_TYPE
     unrolled = []
     while matchedElement = result.iterateNext()
@@ -123,6 +121,7 @@ class XPath
       values = []
       while value = ret.iterateNext()
         values.push value
+      xpath.build()
       obj = {selector: xpath.path, result: values[0], results: values}
       unrolled.push(obj)
     unrolled
