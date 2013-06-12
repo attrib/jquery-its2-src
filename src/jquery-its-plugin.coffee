@@ -64,7 +64,8 @@ $.extend
     XPath.instances = []
     XPath.instances_el = []
     for rule in globalRules
-      rule.applied = {}
+      rule.appliedValues = []
+      rule.appliedElements = []
 
 $.fn.extend
   getITSData: () ->

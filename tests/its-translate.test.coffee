@@ -100,6 +100,7 @@ window.testFile = () ->
       if $(tag).attr('data-test') == 'mlw-lt'
         continue
       xpath = new XPath(tag)
+      xpath.build()
       value = deleteValuesDependingOnTests $.getITSData tag
       string += "#{xpath.path}#{formatOutput value}\n"
       if tag.attributes.length != 0

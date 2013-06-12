@@ -25,18 +25,18 @@ staticData = {}
 class Rule
   constructor: ->
     @rules = []
-    @applied = {}
+    @appliedValues = []
+    @appliedElements = []
     @standoff = []
 
   parse: (rule, content) => throw new Error('AbstractClass Rule: method parse not implemented.')
   apply: (node) => throw new Error('AbstractClass Rule: method apply not implemented.')
 
   applyRules: (ret, tag, attributes) ->
-    xpath = XPath.getInstance tag
     store = false
     for rule in @rules
       if rule.type = @NAME
-        if xpath.process rule.selector
+        if XPath.process rule.selector, tag
           for attribute in attributes
             if rule[attribute]?
               ret[attribute] = rule[attribute]
@@ -84,19 +84,23 @@ class Rule
 
   inherited: (node) ->
     while (1)
-      xpath = XPath.getInstance node
-      if @applied[xpath.path]
-        return $.extend(true, {}, @applied[xpath.path])
+      index = @appliedElements.indexOf(node)
+      if index > -1
+        return $.extend(true, {}, @appliedValues[index])
       else
         node = node.parentNode
-        if node == document
+        if node == document or node == null
           return
 
   store: (node, object) =>
     # don't waste memory here and save empty objects
     if (k for own k of object).length isnt 0
-      xpath = XPath.getInstance node
-      @applied[xpath.path] = object
+      index = @appliedElements.indexOf(node)
+      if index > -1
+        @appliedValues[index] = object
+      else
+        @appliedElements.push node
+        @appliedValues.push object
 
   normalizeYesNo: (translateString) ->
     if typeof translateString == "boolean"
