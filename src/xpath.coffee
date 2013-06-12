@@ -28,9 +28,9 @@ class XPath
     if (element == undefined || element.length <= 0) then return null
 
     if element.jquery?
-      @element = element
+      @element = element.get(0)
     else
-      @element = $(element)
+      @element = element
 
     @build()
 
@@ -45,21 +45,21 @@ class XPath
     if index != -1
       instance = @instances[index]
     else
-      instance = new XPath(elementjQ)
+      instance = new XPath(element)
       @instances.push instance
       @instances_el.push element
     instance
 
   build: =>
     @path = @path.concat @parents()
-    @path = @path.concat @index(@element.get(0))
+    @path = @path.concat @index(@element)
 
   parents: =>
     parentPath = ""
-    if @element.get(0) instanceof Attr
-      parents = $(@element.get(0).ownerElement).parents().get().reverse()
+    if @element instanceof Attr
+      parents = $(@element.ownerElement).parents().get().reverse()
     else
-      parents = @element.parents().get().reverse()
+      parents = $(@element).parents().get().reverse()
     $.each parents, (i, parent) =>
       parentPath = parentPath.concat @index(parent)
     parentPath
@@ -69,10 +69,11 @@ class XPath
       attribute = element
       element = element.ownerElement
     nodeName = element.nodeName.toLowerCase()
-    prevSiblings = $(element).prevAll(nodeName)
+    $element = $(element)
+    prevSiblings = $element.prevAll(nodeName)
     position = prevSiblings.length + 1
 
-    if $(element).parents().length == 0
+    if $element.parents().length == 0
       string = "/#{nodeName}"
     else
       string = "/#{nodeName}[#{position}]"
@@ -87,14 +88,14 @@ class XPath
     selector.replace /h:/g, ''
 
   query: (selector, resultType) ->
-    domElement = @element.get(0)
+    domElement = @element
     document.evaluate selector, domElement, null, resultType, null
 
   process: (selector) ->
     return false if not @element?
     selector = @filter selector
     xpe = new XPathEvaluator()
-    domElement = @element.get(0)
+    domElement = @element
     # domElement has to be a domElement and no attribute
     attribute = false
     if (domElement instanceof Attr)

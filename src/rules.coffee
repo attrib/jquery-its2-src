@@ -45,12 +45,16 @@ class Rule
       @store tag, ret
 
   applyAttributes: (ret, tag) ->
-    if @attributes?
+    if @attributes? and tag.attributes?
+      if not @attributesFlipped?
+        @attributesFlipped = {}
+        for objectName, attributeName of @attributes
+          @attributesFlipped[attributeName] = objectName
       store = false
-      for objectName, attributeName of @attributes
-        attributeValue = $(tag).attr(attributeName)
-        if attributeValue?
-          ret[objectName] = attributeValue
+      for attribute in tag.attributes
+        attributeName = attribute.nodeName
+        if @attributesFlipped[attributeName]?
+          ret[@attributesFlipped[attributeName]] = attribute.nodeValue
           store = true
       if store
         @store tag, ret
@@ -79,12 +83,14 @@ class Rule
     @rules.push(object)
 
   inherited: (node) ->
-    parents = $(node).parents()
-    parents.splice(0, 0, $(node))
-    for parent in parents
-      xpath = XPath.getInstance parent
+    while (1)
+      xpath = XPath.getInstance node
       if @applied[xpath.path]
         return $.extend(true, {}, @applied[xpath.path])
+      else
+        node = node.parentNode
+        if node == document
+          return
 
   store: (node, object) =>
     # don't waste memory here and save empty objects
