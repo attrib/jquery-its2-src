@@ -25,8 +25,6 @@ staticData = {}
 class Rule
   constructor: ->
     @rules = []
-    @appliedValues = []
-    @appliedElements = []
     @standoff = []
 
   parse: (rule, content) => throw new Error('AbstractClass Rule: method parse not implemented.')
@@ -84,9 +82,8 @@ class Rule
 
   inherited: (node) ->
     while (1)
-      index = @appliedElements.indexOf(node)
-      if index > -1
-        return $.extend(true, {}, @appliedValues[index])
+      if node.itsRuleInherit? and node.itsRuleInherit[@NAME]? and XPath.cache
+        return $.extend(true, {}, node.itsRuleInherit[@NAME])
       else
         node = node.parentNode
         if node == document or node == null
@@ -95,12 +92,12 @@ class Rule
   store: (node, object) =>
     # don't waste memory here and save empty objects
     if (k for own k of object).length isnt 0
-      index = @appliedElements.indexOf(node)
-      if index > -1
-        @appliedValues[index] = object
+      if node.itsRuleInherit? and node.itsRuleInherit[@NAME]? and XPath.cache
+        node.itsRuleInherit = $.extend(true, node.itsRuleInherit, object)
       else
-        @appliedElements.push node
-        @appliedValues.push object
+        if not node.itsRuleInherit?
+          node.itsRuleInherit = {}
+        node.itsRuleInherit[@NAME] = object
 
   normalizeYesNo: (translateString) ->
     if typeof translateString == "boolean"

@@ -61,11 +61,15 @@ $.extend
     $(element).getITSData();
 
   clearITSCache: () ->
-    XPath.instances = []
-    XPath.instances_el = []
-    for rule in globalRules
-      rule.appliedValues = []
-      rule.appliedElements = []
+    XPath.cache = false
+    for tag in $('*')
+      delete tag.itsRuleInherit
+      delete tag.itsXPath
+      if tag.attributes.length != 0
+        for attributes in tag.attributes
+          delete attributes.itsRuleInherit
+          delete attributes.itsXPath
+    XPath.cache = true
 
 $.fn.extend
   getITSData: () ->

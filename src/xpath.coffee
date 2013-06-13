@@ -21,6 +21,8 @@
 ###
 
 class XPath
+  @cache = true
+
   constructor: (element) ->
     @path = ''
     @element = null
@@ -32,20 +34,16 @@ class XPath
     else
       @element = element
 
-  @instances_el: []
-  @instances: []
   @getInstance: (elementjQ) =>
     if elementjQ.jquery?
       element = elementjQ.get(0)
     else
       element = elementjQ
-    index = @instances_el.indexOf(element)
-    if index != -1
-      instance = @instances[index]
+    if element.itsXPath? and XPath.cache
+      instance = element.itsXPath
     else
       instance = new XPath(element)
-      @instances.push instance
-      @instances_el.push element
+      element.itsXPath = instance
     instance
 
   build: =>
