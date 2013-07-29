@@ -76,6 +76,11 @@ class ElementsWithinTextRule extends Rule
         return {
           withinText: 'nested'
         }
+    else
+      if tag.nodeName.toLowerCase() in ['noscript', 'script']
+        return {
+          withinText: 'nested'
+        }
     return {
       withinText: 'no'
     }
