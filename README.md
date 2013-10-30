@@ -1,8 +1,6 @@
 JQuery ITS2.0 Source
 ====================
 
-**This the current development branch, for Version 1.2.0. This Version supports all data categories and will be released when ITS hits recommendation status. You can find the compiled version [here](https://github.com/attrib/jquery-its2/tree/dev).** (2013-07-29)
-
 JQuery selector plugin for the [International Tag Standard 2.0 (ITS2.0)](http://www.w3.org/TR/its20/).
 With this plugin it is possible to select HTML-nodes depending on ITS markup.
 

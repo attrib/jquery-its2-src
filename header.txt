@@ -4,7 +4,7 @@
   * Authors: Karl Fritsche <karl.fritsche@cocomore.com>
   *          Alejandro Leiva <alejandro.leiva@cocomore.com>
   *
-  * Version: 1.1.1
+  * Version: 1.2.0
   *
   * This file is part of ITS Parser. ITS Parser is free software: you can
   * redistribute it and/or modify it under the terms of the GNU General Public

@@ -1,5 +1,5 @@
-Version 1.2.0 (development)
-===========================
+Version 1.2.0
+=============
 
 * attrib: Fixed issue with elements within text.
 * attrib: Added Inheritance and XPath data to the tag itself (performance)
